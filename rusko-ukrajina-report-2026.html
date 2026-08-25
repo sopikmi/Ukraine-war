@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SITREP // Rusko–Ukrajina 2026 · Nezávislá OSINT syntéza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f14;
+  --panel:#121820;
+  --panel-alt:#171f29;
+  --border:#2a3441;
+  --border-soft:#1e2733;
+  --text:#dbe2ea;
+  --text-dim:#8b98a8;
+  --text-faint:#5b6878;
+  --amber:#c98a2c;
+  --amber-soft:#8a651f;
+  --red:#b0453a;
+  --red-soft:#7a3129;
+  --green:#5c8a68;
+  --green-soft:#3f5f48;
+  --blue:#4a7fa3;
+  --blue-soft:#345a73;
+  --grey-tile:#242d38;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--amber-soft);color:#fff;}
+a{color:var(--amber);text-decoration:none;border-bottom:1px solid var(--amber-soft);}
+a:hover{color:#e0a94a;border-bottom-color:#e0a94a;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+h1,h2,h3,h4{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:0.02em;margin:0;color:#f0f3f6;}
+p{margin:0 0 1em 0;color:var(--text);}
+small,.small{font-size:0.85em;color:var(--text-dim);}
+
+/* ===== Layout shell ===== */
+.shell{display:grid;grid-template-columns:260px 1fr;max-width:1400px;margin:0 auto;}
+@media (max-width:960px){.shell{grid-template-columns:1fr;}}
+
+/* ===== Sidebar / TOC ===== */
+nav.toc{
+  position:sticky;top:0;align-self:start;
+  height:100vh;overflow-y:auto;
+  padding:28px 20px 40px 24px;
+  border-right:1px solid var(--border-soft);
+  background:linear-gradient(180deg,#0d1319,#0a0e13);
+}
+@media (max-width:960px){nav.toc{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--border-soft);padding:20px;}}
+.toc-brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.toc-brand .dot{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2.4s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+.toc-brand span{font-family:'Oswald';font-size:0.78rem;letter-spacing:0.14em;color:var(--text-dim);text-transform:uppercase;}
+nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc;}
+nav.toc li{counter-increment:toc;margin-bottom:2px;}
+nav.toc a{
+  display:flex;gap:10px;
+  border:none;color:var(--text-dim);
+  font-size:0.86rem;padding:7px 8px;border-radius:3px;
+  transition:background .15s,color .15s;
+}
+nav.toc a::before{
+  content:counter(toc,decimal-leading-zero);
+  font-family:'IBM Plex Mono';font-size:0.76rem;color:var(--text-faint);
+}
+nav.toc a:hover{background:var(--panel-alt);color:#fff;}
+nav.toc .toc-foot{margin-top:24px;padding-top:16px;border-top:1px solid var(--border-soft);font-size:0.72rem;color:var(--text-faint);line-height:1.5;}
+
+/* ===== Main column ===== */
+main{padding:0 0 80px 0;}
+
+/* ===== Cover ===== */
+.cover{
+  position:relative;
+  padding:56px 48px 44px 48px;
+  border-bottom:1px solid var(--border-soft);
+  background:
+    radial-gradient(ellipse at top right, rgba(201,138,44,0.08), transparent 60%),
+    repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
+  overflow:hidden;
+}
+@media (max-width:640px){.cover{padding:36px 20px;}}
+.stamp{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--red-soft);color:#e0938a;
+  font-family:'IBM Plex Mono';font-size:0.72rem;letter-spacing:0.12em;
+  padding:5px 10px;border-radius:2px;text-transform:uppercase;
+  background:rgba(176,69,58,0.08);
+  transform:rotate(-1deg);
+  margin-bottom:22px;
+}
+.cover h1{font-size:2.6rem;line-height:1.08;max-width:820px;color:#fff;}
+@media (max-width:640px){.cover h1{font-size:1.9rem;}}
+.cover .lede{max-width:680px;color:var(--text-dim);font-size:1.05rem;margin-top:16px;}
+.cover-meta{
+  display:flex;flex-wrap:wrap;gap:28px;margin-top:32px;
+  font-family:'IBM Plex Mono';font-size:0.78rem;color:var(--text-dim);
+}
+.cover-meta div span{display:block;color:var(--text-faint);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px;}
+.cover-meta div b{color:#fff;font-weight:500;}
+
+/* ===== Sections ===== */
+section{padding:44px 48px;border-bottom:1px solid var(--border-soft);}
+@media (max-width:640px){section{padding:32px 20px;}}
+.eyebrow{
+  font-family:'IBM Plex Mono';font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:8px;display:block;
+}
+section h2{font-size:1.7rem;color:#fff;margin-bottom:14px;}
+section h3{font-size:1.08rem;color:#f0f3f6;margin:26px 0 10px 0;}
+.intro-text{max-width:760px;color:var(--text-dim);}
+
+.callout{
+  border-left:3px solid var(--amber-soft);
+  background:var(--panel);
+  padding:14px 18px;margin:18px 0;border-radius:0 4px 4px 0;
+  font-size:0.92rem;color:var(--text-dim);
+}
+.callout b{color:var(--text);}
+
+/* ===== Tables ===== */
+.table-wrap{overflow-x:auto;margin:18px 0 8px 0;border:1px solid var(--border-soft);border-radius:6px;}
+table{width:100%;border-collapse:collapse;font-size:0.88rem;min-width:560px;}
+thead th{
+  text-align:left;font-family:'IBM Plex Mono';font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--text-dim);background:var(--panel-alt);padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap;
+}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border-soft);vertical-align:top;color:var(--text);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,0.02);}
+td.num{font-family:'IBM Plex Mono';color:#fff;white-space:nowrap;}
+td.src a{font-size:0.78rem;}
+.tag{display:inline-block;font-family:'IBM Plex Mono';font-size:0.68rem;padding:2px 7px;border-radius:20px;letter-spacing:0.03em;}
+.tag-low{background:rgba(92,138,104,0.15);color:#8fc09b;border:1px solid var(--green-soft);}
+.tag-mid{background:rgba(201,138,44,0.15);color:#e0af6a;border:1px solid var(--amber-soft);}
+.tag-high{background:rgba(176,69,58,0.15);color:#e0938a;border:1px solid var(--red-soft);}
+.tag-disinfo{background:rgba(176,69,58,0.25);color:#ffb3a8;border:1px solid var(--red);}
+
+/* ===== Bar rows (simple css bar chart) ===== */
+.bar-row{margin:14px 0;}
+.bar-row .label{display:flex;justify-content:space-between;font-family:'IBM Plex Mono';font-size:0.78rem;color:var(--text-dim);margin-bottom:5px;}
+.bar-row .label b{color:#fff;font-weight:500;}
+.bar-track{height:10px;background:var(--panel-alt);border-radius:4px;overflow:hidden;border:1px solid var(--border-soft);}
+.bar-fill{height:100%;border-radius:4px;}
+
+/* ===== Stat grid ===== */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0;}
+.stat-card{background:var(--panel);border:1px solid var(--border-soft);border-radius:6px;padding:16px 18px;}
+.stat-card .n{font-family:'Oswald';font-size:1.7rem;color:#fff;line-height:1;}
+.stat-card .l{font-size:0.78rem;color:var(--text-dim);margin-top:6px;}
+.stat-card .s{font-size:0.7rem;color:var(--text-faint);margin-top:4px;}
+
+/* ===== Scenario cards ===== */
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;}
+@media (max-width:900px){.scenario-grid{grid-template-columns:1fr;}}
+.scenario{border:1px solid var(--border);border-radius:8px;padding:20px;background:var(--panel);position:relative;}
+.scenario.opt{border-top:3px solid var(--green);}
+.scenario.neu{border-top:3px solid var(--amber);}
+.scenario.pes{border-top:3px solid var(--red);}
+.scenario h4{font-size:1.05rem;margin-bottom:4px;}
+.scenario .prob{font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;display:block;}
+.scenario ul{margin:0;padding-left:18px;font-size:0.86rem;color:var(--text-dim);}
+.scenario li{margin-bottom:8px;}
+.scenario li b{color:var(--text);}
+
+/* ===== Map / cartogram ===== */
+.map-wrap{
+  margin:24px 0;background:var(--panel);border:1px solid var(--border-soft);border-radius:8px;
+  padding:24px;position:relative;
+}
+.map-note{font-size:0.74rem;color:var(--text-faint);margin-bottom:16px;font-family:'IBM Plex Mono';}
+.cartogram{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  grid-auto-rows:52px;
+  gap:6px;
+  max-width:640px;
+}
+.tile{
+  border-radius:4px;padding:6px 8px;font-family:'IBM Plex Mono';
+  display:flex;flex-direction:column;justify-content:center;
+  border:1px solid rgba(255,255,255,0.06);
+  font-size:0.72rem;color:#fff;position:relative;
+}
+.tile .pct{font-size:0.95rem;font-weight:600;}
+.tile .cty{font-size:0.66rem;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:0.04em;}
+.tile.ru{background:repeating-linear-gradient(45deg,#3a1512,#3a1512 6px,#2c100e 6px,#2c100e 12px);border-color:#5a1f1a;color:#e0938a;justify-content:center;align-items:center;font-size:0.62rem;text-align:center;}
+.tile.by{background:#241a12;border-color:#3d2c1a;color:#a08560;justify-content:center;align-items:center;font-size:0.6rem;text-align:center;}
+.tile.ua{background:#12202b;border-color:#1e3a4d;color:#6fa8c9;justify-content:center;align-items:center;font-size:0.62rem;text-align:center;}
+.tile.spend-vhigh{background:linear-gradient(135deg,#7a3129,#5c241e);}
+.tile.spend-high{background:linear-gradient(135deg,#8a651f,#6b4e18);}
+.tile.spend-mid{background:linear-gradient(135deg,#345a73,#274456);}
+.tile.spend-low{background:linear-gradient(135deg,#3a4552,#2b333d);}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px;font-size:0.72rem;color:var(--text-dim);font-family:'IBM Plex Mono';}
+.legend span{display:inline-flex;align-items:center;gap:6px;}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block;}
+
+/* ===== Country cards ===== */
+.country-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:20px;}
+.country{background:var(--panel);border:1px solid var(--border-soft);border-radius:8px;padding:18px 20px;}
+.country .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.country .head h4{font-size:1rem;}
+.country .head .gdp{font-family:'IBM Plex Mono';font-size:0.85rem;color:var(--amber);}
+.country p{font-size:0.85rem;color:var(--text-dim);margin-bottom:6px;}
+.country .flag-note{font-size:0.7rem;color:var(--text-faint);border-top:1px solid var(--border-soft);margin-top:10px;padding-top:8px;}
+
+/* ===== Twitter / OSINT block ===== */
+.osint-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:16px;}
+.osint-card{
+  border:1px solid var(--border-soft);background:var(--panel);border-radius:6px;padding:14px 16px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.osint-card .handle{font-family:'IBM Plex Mono';color:#fff;font-size:0.9rem;}
+.osint-card .handle a{border:none;}
+.osint-card .desc{font-size:0.78rem;color:var(--text-dim);}
+
+/* ===== Sources list ===== */
+.src-list{columns:2;column-gap:32px;margin-top:14px;}
+@media (max-width:800px){.src-list{columns:1;}}
+.src-list li{font-size:0.82rem;margin-bottom:9px;break-inside:avoid;color:var(--text-dim);}
+.src-list li a{color:var(--text-dim);border-bottom:1px dotted var(--border);}
+.src-list li a:hover{color:var(--amber);}
+
+footer{padding:32px 48px;color:var(--text-faint);font-size:0.75rem;line-height:1.7;}
+footer b{color:var(--text-dim);}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<nav class="toc">
+  <div class="toc-brand"><span class="dot"></span><span>SITREP · 25.08.2026</span></div>
+  <ol>
+    <li><a href="#uvod">Metodologie</a></li>
+    <li><a href="#ztraty">Ztráty na životech</a></li>
+    <li><a href="#ruske-tvrzeni">Ruský odhad ztrát UA</a></li>
+    <li><a href="#technika">Ztráty techniky</a></li>
+    <li><a href="#personal">Personální udržitelnost</a></li>
+    <li><a href="#ekonomika">Ruská ekonomika</a></li>
+    <li><a href="#nato-kapacita">Kapacita vůči NATO</a></li>
+    <li><a href="#jednani">Mírová jednání</a></li>
+    <li><a href="#scenare">Scénáře vývoje</a></li>
+    <li><a href="#vychodni-krídlo">Východní křídlo NATO</a></li>
+    <li><a href="#zdroje">Zdroje a OSINT</a></li>
+  </ol>
+  <div class="toc-foot">
+    Sestaveno z veřejně dostupných zdrojů (OSINT). Čísla obou stran nelze nezávisle verifikovat — viz metodologická poznámka. Aktualizace k 25. srpnu 2026.
+  </div>
+</nav>
+
+<main>
+
+  <div class="cover">
+    <div class="stamp">⚠ neověřeno nezávisle · syntéza otevřených zdrojů</div>
+    <h1>Rusko–Ukrajina: ztráty, technika, scénáře a východní křídlo NATO</h1>
+    <p class="lede">Nezávislá analytická syntéza dostupných dat k srpnu 2026 — bez propagandy jedné či druhé strany, s explicitním rozptylem odhadů a jejich zdroji. Připraveno jako pracovní dokument, ne jako předpověď.</p>
+    <div class="cover-meta">
+      <div><span>Stav k</span><b>25. srpen 2026</b></div>
+      <div><span>Rozsah</span><b>ztráty · technika · NATO východ · scénáře</b></div>
+      <div><span>Metodika</span><b>vícezdrojová triangulace</b></div>
+      <div><span>Jazyk</span><b>čeština</b></div>
+    </div>
+  </div>
+
+  <!-- ================= METHODOLOGY ================= -->
+  <section id="uvod">
+    <span class="eyebrow">00 / Metodologie</span>
+    <h2>Proč se čísla tak liší</h2>
+    <p class="intro-text">Ani Kyjev, ani Moskva nezveřejňují ověřitelná průběžná data o vlastních ztrátách. Existují tři typy zdrojů s odlišnou spolehlivostí a odlišným zkreslením:</p>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="n mono">①</div>
+        <div class="l">Jmenovité verifikace</div>
+        <div class="s">Mediazona/Meduza (RU), UALosses (UA) — nejnižší, ale nejjistější odhady; systematicky podhodnocené, protože vyžadují otevřený zdroj/nekrolog ke každému jménu.</div>
+      </div>
+      <div class="stat-card">
+        <div class="n mono">②</div>
+        <div class="l">Rozvědné odhady</div>
+        <div class="s">CIA, britské MO, GCHQ — středně vysoké, metodika většinou neveřejná, částečně odtajňovaná.</div>
+      </div>
+      <div class="stat-card">
+        <div class="n mono">③</div>
+        <div class="l">Modelové odhady think-tanků</div>
+        <div class="s">CSIS a podobné — nejvyšší, extrapolované z bojové aktivity, satelitních a dronových dat.</div>
+      </div>
+    </div>
+    <div class="callout"><b>Pravidlo palce:</b> obě válčící strany mají systematickou motivaci nadsazovat ztráty nepřítele a podhodnocovat vlastní. Kdykoliv číslo pochází jen z jedné strany bez nezávislého potvrzení, bereme ho jako horní/dolní mez, ne jako fakt.</div>
+  </section>
+
+  <!-- ================= CASUALTIES ================= -->
+  <section id="ztraty">
+    <span class="eyebrow">01 / Ztráty na životech</span>
+    <h2>Kumulativní ztráty, únor 2022 – srpen 2026</h2>
+    <p class="intro-text">Rozptyl odhadů je enormní. Uvádíme rozsah napříč nezávislými zdroji s jasným určením typu čísla (padlí / celkové ztráty vč. raněných a nezvěstných).</p>
+
+    <h3>🇷🇺 Rusko</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kategorie</th><th>Odhad</th><th>Zdroj</th><th>Spolehlivost</th></tr></thead>
+        <tbody>
+          <tr><td>Padlí (jmenovitě ověřeno)</td><td class="num">77 000+ jen za rok 2026</td><td class="src"><a href="https://en.zona.media/article/2026/08/14/casualties_eng-trl" target="_blank">Mediazona</a></td><td><span class="tag tag-low">dolní mez</span></td></tr>
+          <tr><td>Padlí (nezávislá syntéza)</td><td class="num">267 500–385 500</td><td class="src"><a href="https://wardeathdata.com/russia-ukraine-war-death-toll-2026/" target="_blank">WarDeathData</a></td><td><span class="tag tag-mid">střední</span></td></tr>
+          <tr><td>Padlí (GCHQ odhad)</td><td class="num">~500 000 (do konce 6/2026)</td><td class="src"><a href="https://factually.co/fact-checks/military/russia-ukraine-war-casualty-figures-2026-d084ab" target="_blank">Factually.co</a></td><td><span class="tag tag-high">horní mez</span></td></tr>
+          <tr><td>Padlí (CSIS, nejvyšší)</td><td class="num">až 450 000</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td><span class="tag tag-high">horní mez</span></td></tr>
+          <tr><td>Celkové ztráty (K+W+MIA)</td><td class="num">~1,4 milionu</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td><span class="tag tag-mid">modelový odhad</span></td></tr>
+          <tr><td>Celkové ztráty (ukr. gen. štáb)</td><td class="num">~1 478 000 (k 24.8.2026)</td><td class="src"><a href="https://index.minfin.com.ua/en/russian-invading/casualties/" target="_blank">Minfin/UA GS</a></td><td><span class="tag tag-high">strana konfliktu</span></td></tr>
+          <tr><td>Tempo ztrát 2026</td><td class="num">~34 000/měsíc (červenec: 42 000, rekord)</td><td class="src"><a href="https://kyivindependent.com/russia-records-highest-monthly-losses-of-2026/" target="_blank">Kyiv Independent</a></td><td><span class="tag tag-mid">strana konfliktu</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>🇺🇦 Ukrajina</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kategorie</th><th>Odhad</th><th>Zdroj</th><th>Spolehlivost</th></tr></thead>
+        <tbody>
+          <tr><td>Padlí (oficiálně, Zelenskyj)</td><td class="num">55 000 (únor 2026)</td><td class="src"><a href="https://wardeathdata.com/russia-ukraine-war-death-toll-2026/" target="_blank">viz WarDeathData</a></td><td><span class="tag tag-low">dolní mez, přiznaně neúplné</span></td></tr>
+          <tr><td>Padlí (jmenovitě, UALosses)</td><td class="num">~91 559</td><td class="src"><a href="https://factually.co/fact-checks/military/russia-ukraine-war-casualty-totals-figures-estimates-f773b0" target="_blank">Factually.co</a></td><td><span class="tag tag-low">otevřený zdroj</span></td></tr>
+          <tr><td>Padlí (CSIS)</td><td class="num">100 000–150 000</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td><span class="tag tag-mid">modelový odhad</span></td></tr>
+          <tr><td>Nezvěstní (MIA)</td><td class="num">84 568 (duben 2025)</td><td class="src"><a href="https://www.russiamatters.org/news/russia-ukraine-war-report-card/russia-ukraine-war-report-card-july-22-2026" target="_blank">Russia Matters</a></td><td><span class="tag tag-mid">koordinační centrála UA</span></td></tr>
+          <tr><td>Zajatí (vráceno od 2022)</td><td class="num">9 716 osob / 76+ výměn</td><td class="src"><a href="https://united24media.com/war-in-ukraine/nearly-10000-ukrainians-have-returned-from-russian-captivity-since-2022-21839" target="_blank">United24 Media</a></td><td><span class="tag tag-low">potvrzené počty</span></td></tr>
+          <tr><td>Celkové ztráty (K+W+MIA)</td><td class="num">500 000–625 000</td><td class="src"><a href="https://www.russiamatters.org/news/russia-ukraine-war-report-card/russia-ukraine-war-report-card-july-22-2026" target="_blank">Russia Matters / FT</a></td><td><span class="tag tag-mid">західní odhad</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Poznámka k zajatým/nezvěstným: kategorie se průběžně přelévají — 24.8.2026 se vrátilo 10 vojáků vedených jako nezvěstní od let 2024–2025, teprve při výměně se ukázalo, že byli v zajetí. Skutečný počet Ukrajinců stále držených v ruském zajetí není veřejně známý. Zdroj: <a href="https://euromaidanpress.com/2026/08/24/ukraine-returns-10-servicemen-its-own-records-had-marked-missing-in-action/" target="_blank">Euromaidan Press</a>.</p>
+
+    <h3>Poměr ztrát a civilní oběti</h3>
+    <div class="bar-row">
+      <div class="label"><span>Rusko : Ukrajina (poměr ztrát dle CSIS)</span><b>2,5 : 1 až 2 : 1</b></div>
+      <div class="bar-track"><div class="bar-fill" style="width:71%;background:var(--red);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="label"><span>Podíl ruských ztrát z dronových úderů</span><b>&gt;90 %</b></div>
+      <div class="bar-track"><div class="bar-fill" style="width:90%;background:var(--amber);"></div></div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="n mono">16 126</div><div class="l">potvrzených civilních mrtvých (OHCHR OSN, k 31.5.2026)</div><div class="s">jediné plně metodicky ověřené číslo — přesto přiznaně podhodnocené kvůli nedostupnosti okupovaných území</div></div>
+    </div>
+    <p class="small">Zdroj OHCHR: viz sekce Zdroje níže (Statista/OHCHR agregace).</p>
+  </section>
+
+  <!-- ================= RUSSIAN CLAIMS ================= -->
+  <section id="ruske-tvrzeni">
+    <span class="eyebrow">02 / Ruský (nadnesený) odhad</span>
+    <h2>Co tvrdí ruská strana o ukrajinských ztrátách</h2>
+    <p class="intro-text">Explicitně uvádíme i tato čísla — jde ale o <b>needěřitelný, propagandistický zdroj</b>, sloužící primárně jako informační nástroj, ne jako fakt. Zařazeno pro úplnost a kontrast.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Zdroj</th><th>Tvrzení</th><th>Nezávislé posouzení</th></tr></thead>
+        <tbody>
+          <tr><td>Ruské MO, ministr Andrej Belousov (prosinec 2025)</td><td class="num">~500 000 ztrát UA jen za rok 2025 + 103 000 kusů techniky</td><td><span class="tag tag-disinfo">nepodloženo</span> <a href="https://verstka.media/how-russias-defense-ministry-has-been-reporting-on-the-war-for-four-years" target="_blank">Verstka</a></td></tr>
+          <tr><td>Ruský generální štáb (počátek 2026)</td><td class="num">1,5 milionu ztrát UA celkem od 2022</td><td><span class="tag tag-disinfo">označeno za dezinformaci</span> <a href="https://euvsdisinfo.eu/report/ukraine-has-lost-15-million-soldiers-since-2022-half-a-million-in-2025-alone/" target="_blank">EUvsDisinfo</a></td></tr>
+          <tr><td>Proruský hacktivismus (srpen 2025)</td><td class="num">1,7 milionu ztrát UA (údajně z "uniklých dokumentů")</td><td><span class="tag tag-disinfo">vyvráceno</span> <a href="https://www.euronews.com/2025/08/27/verifying-russian-propagandists-claim-that-ukraine-has-lost-17-million-soldiers" target="_blank">Euronews ověřování</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><b>Proč matematicky nesedí:</b> aktivní ukrajinská armáda čítá odhadem 800 000–900 000 osob. Ztráta 1,5–1,7 milionu by znamenala opakované vyčerpání celé síly, aniž by došlo k viditelnému kolapsu fronty — což se nestalo. Jde o standardní vzorec "amplifikace ztrát nepřítele", který popisují analýzy CSIS i EUvsDisinfo.</div>
+  </section>
+
+  <!-- ================= EQUIPMENT ================= -->
+  <section id="technika">
+    <span class="eyebrow">03 / Ztráty techniky</span>
+    <h2>Ruská technika ztracená dle ukrajinského generálního štábu</h2>
+    <p class="intro-text">Kumulativně k 24. 8. 2026. Ukrajinský zdroj — brát s rezervou, ale trend (masivní úbytek) potvrzují i nezávislé zdroje (Foreign Affairs/Kofman, Oryx metodika).</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kategorie</th><th>Počet</th><th>Denní přírůstek (24.8.)</th></tr></thead>
+        <tbody>
+          <tr><td>Tanky</td><td class="num">12 293</td><td class="num">+1</td></tr>
+          <tr><td>Obrněná bojová vozidla</td><td class="num">25 211</td><td class="num">+9</td></tr>
+          <tr><td>Dělostřelecké systémy</td><td class="num">48 519</td><td class="num">+68</td></tr>
+          <tr><td>MLRS (raketomety)</td><td class="num">2 056</td><td class="num">+2</td></tr>
+          <tr><td>Systémy PVO</td><td class="num">1 586</td><td class="num">+1</td></tr>
+          <tr><td>Letadla</td><td class="num">440</td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Zdroj: <a href="https://index.minfin.com.ua/en/russian-invading/casualties/" target="_blank">Minfin.index / ukrajinský generální štáb</a>.</p>
+
+    <h3>Nezávislé křížové odhady</h3>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="n mono">14 000+</div><div class="l">obrněných vozidel ztraceno (do 5/2026)</div><div class="s"><a href="https://www.foreignaffairs.com/russia/next-russia-threat-michael-kofman" target="_blank">Foreign Affairs / Kofman</a></div></div>
+      <div class="stat-card"><div class="n mono">2 100+</div><div class="l">dělostřeleckých systémů</div><div class="s">tamtéž</div></div>
+      <div class="stat-card"><div class="n mono">3 500+</div><div class="l">tanků potvrzeno vizuálně (Oryx metodika, jaro 2026)</div><div class="s">nezávislý, konzervativní dolní odhad</div></div>
+    </div>
+    <div class="callout"><b>Efektivita ruských ofenziv klesá:</b> v roce 2025 stálo Rusko dobytí jedné čtvereční míle 200 ztrát; v prvních pěti měsících 2026, při čistém zisku jen 17 čtverečních mil, to bylo přes <b>9 600 ztrát na míli</b>. Tempo postupu kleslo na 50–90 metrů denně. Zdroj: <a href="https://mickryan.substack.com/p/losing-on-every-dimension" target="_blank">Mick Ryan, Futura Doctrina</a>.</div>
+
+    <h3>Ukrajinské ztráty techniky</h3>
+    <p class="intro-text">Ukrajina na rozdíl od Ruska tato data průběžně nezveřejňuje (operační bezpečnost). Nezávislé odhady existují jen fragmentárně a nejsou v tomto dokumentu prezentovány jako srovnatelně spolehlivé.</p>
+  </section>
+
+  <!-- ================= MANPOWER ================= -->
+  <section id="personal">
+    <span class="eyebrow">04 / Personální udržitelnost</span>
+    <h2>Kdo dřív dojde síly?</h2>
+    <p class="intro-text">Možná důležitější metrika než kumulativní ztráty — ukazuje, která strana je blíž vyčerpání personální základny.</p>
+
+    <div class="bar-row">
+      <div class="label"><span>🇷🇺 Ruská mobilizace</span><b>40 000–45 000 / měsíc</b></div>
+      <div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--red);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="label"><span>🇺🇦 Ukrajinská mobilizace</span><b>25 000–27 000 / měsíc</b></div>
+      <div class="bar-track"><div class="bar-fill" style="width:52%;background:var(--blue);"></div></div>
+    </div>
+    <p class="small">Zdroj: <a href="https://www.yahoo.com/news/russia-mobilizes-40-000-45-082145204.html" target="_blank">Zelenskyj / Kyiv Independent (Yahoo)</a>. Rusko navíc plánuje odvod 160 000 branců na povinnou službu — největší odvodová kampaň za 14 let.</p>
+
+    <div class="callout"><b>Zlomový signál:</b> podle analýzy Micka Ryana a ukrajinského generálního štábu Rusko od poloviny roku 2026 poprvé <b>ztrácí více vojáků, než kolik jich dokáže mobilizovat</b>. Pokud se trend potvrdí, jde o zásadní bod obratu. Zdroj: <a href="https://www.russiamatters.org/blog/russia-losing-more-soldiers-ukraine-its-recruiting" target="_blank">Russia Matters</a>.</div>
+
+    <h3>🇷🇺 Rusko — charakteristika</h3>
+    <p>Vyhýbá se druhé vlně nepopulární mobilizace (po zářijové 2022, kdy uprchlo přes 261 000 Rusů) — spoléhá na finanční pobídky a vězeňské amnestie.</p>
+
+    <h3>🇺🇦 Ukrajina — charakteristika</h3>
+    <p>Problém není primárně demografický, ale strukturální: akutní nedostatek personálu na frontě, snížený počet dobrovolníků, únava dlouhosloužících vojáků, rekordní míra svévolného opuštění jednotky a rostoucí veřejná nevole vůči mobilizaci. Program pro 18–24leté dobrovolníky nepřinesl významný objem nových rekrutů. Carnegie to označuje spíš jako <b>„krizi důvěry"</b> než kolaps vůle bojovat — lidé se bojí, že mobilizace je jednosměrná cesta. Reforma z června 2026 zavádí pevné kontrakty místo neomezené služby a slibuje postupné propouštění nejdéle sloužících vojáků, detaily a načasování ale zůstávají nejasné.</p>
+    <p class="small">Zdroje: <a href="https://carnegieendowment.org/research/2026/03/ukraine-military-russia-war-manpower-recruitment" target="_blank">Carnegie</a>, <a href="https://www.fdd.org/analysis/2026/06/18/ukraine-unveils-reforms-to-address-manpower-shortage/" target="_blank">FDD</a>, <a href="https://www.iiss.org/online-analysis/military-balance/2026/04/attrition-and-adaptation-ukraines-evolving-war-effort/" target="_blank">IISS Military Balance</a>.</p>
+  </section>
+
+  <!-- ================= ECONOMY ================= -->
+  <section id="ekonomika">
+    <span class="eyebrow">05 / Ruská ekonomika</span>
+    <h2>Palivo pro válku dochází — pomalu</h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="n mono">0,4–1,4 %</div><div class="l">projekce růstu HDP 2026</div><div class="s">IMF / ruská Akademie věd</div></div>
+      <div class="stat-card"><div class="n mono">1,7 bil. Kč*</div><div class="l">rekordní měsíční rozpočtový deficit, leden 2026</div><div class="s">*v rublech (1,7 bilionu rublů)</div></div>
+      <div class="stat-card"><div class="n mono">−4 %</div><div class="l">meziroční pokles výdajů na obranu v rozpočtu 2026</div><div class="s">kompenzováno nárůstem výdajů na "vnitřní bezpečnost" o 11 %</div></div>
+      <div class="stat-card"><div class="n mono">$21 mld.</div><div class="l">čistě likvidní zbytek rezervního fondu (National Wealth Fund)</div><div class="s">"stěží pokryje jednoletý rozpočtový deficit"</div></div>
+    </div>
+    <p>Ruská ekonomika podle většiny analýz nesměřuje k náhlému kolapsu, ale k <b>pomalému, vyčerpávajícímu úpadku</b> s ubývajícími rezervami. Stát má nástroje (škrty sociálních výdajů, nucené úvěrování státními bankami, tisk peněz, čerpání rezerv), ale ty nejsou nekonečné. Paradoxně by i konec bojů v Ukrajině mohl krátkodobě zvýšit riziko recese — snížením výstupu ve zbrojním průmyslu a poklesem příjmů domácností závislých na vojenských výplatách.</p>
+    <p class="small">Zdroje: <a href="https://www.osw.waw.pl/en/publikacje/osw-commentary/2025-12-09/russias-2026-budget-mounting-financial-challenges-and-economic" target="_blank">OSW Centre for Eastern Studies</a>, <a href="https://www.themoscowtimes.com/2026/01/02/russias-economy-in-2026-more-war-slower-growth-and-higher-taxes-a91579" target="_blank">Moscow Times</a>, <a href="https://euvsdisinfo.eu/in-2026-the-russian-economy-is-in-big-trouble/" target="_blank">EUvsDisinfo</a>, <a href="https://www.veritaseuropaea.eu/2026/05/the-real-russian-economy-war-budgets-and-structural-decay/" target="_blank">Veritas Europaea</a>.</p>
+  </section>
+
+  <!-- ================= NATO CAPACITY ================= -->
+  <section id="nato-kapacita">
+    <span class="eyebrow">06 / Kapacita vůči NATO</span>
+    <h2>Kolik toho Rusko zvládne obnovit — a jak rychle</h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="n mono">17×</div><div class="l">nárůst produkce dělostřelecké munice od 2021</div><div class="s">Estonská rozvědka</div></div>
+      <div class="stat-card"><div class="n mono">2 000+</div><div class="l">plánovaných tanků T-90M/M2/T-72B3M do 2036</div><div class="s">Frontelligence Insight</div></div>
+      <div class="stat-card"><div class="n mono">6 měs. – 5 let</div><div class="l">odhadovaná doba rekonstituce armády po příměří</div><div class="s">ECFR</div></div>
+      <div class="stat-card"><div class="n mono">80 000</div><div class="l">vojáků — kapacita nové infrastruktury u hranic s Norskem/Finskem</div><div class="s">satelitní snímky, švédská MUST</div></div>
+    </div>
+    <p>Rusko současně vede válku a přezbrojuje se pro budoucí konflikt. Carnegie ale varuje, že při pokračování tempa ztrát z roku 2024 hrozí vyčerpání sovětských skladových zásob u některých typů techniky možná už v roce 2026 — většina nasazované techniky je repasovaná, kvalitativně horší než nová. Atlantic Council cituje analytiky, podle nichž tempo ruské vojenské obnovy už teď <b>předčí západní očekávání</b>.</p>
+    <div class="callout"><b>Nejcitovanější rizikové okno:</b> RAND a Atlantic Council upozorňují, že za 2–3 roky by NATO mohlo čelit masivní ruské síle na hranicích, zatímco vlastní síly na to nemusí být dostatečně velké — zejména pokud dojde k souběhu příměří v Ukrajině, rychlé ruské rekonstituce a oslabení jednoty NATO.</div>
+    <p class="small">Zdroje: <a href="https://www.milwaukeeindependent.com/explainers/russia-outlines-plan-rebuild-armored-forces-preparation-large-scale-war-nato/" target="_blank">Milwaukee Independent / ISW</a>, <a href="https://ecfr.eu/article/the-ticking-clock-why-natos-deterrence-against-russia-is-under-pressure/" target="_blank">ECFR</a>, <a href="https://www.rand.org/pubs/research_briefs/RBA2713-2.html" target="_blank">RAND</a>, <a href="https://carnegieendowment.org/research/2024/09/russian-military-reconstitution-2030-pathways-and-prospects" target="_blank">Carnegie</a>, <a href="https://www.atlanticcouncil.org/in-depth-research-reports/report/nato-russia-dynamics-prospects-for-reconstitution-of-russian-military-power/" target="_blank">Atlantic Council</a>, <a href="https://www.twz.com/news-features/russia-building-new-infrastructure-for-major-troop-deployments-along-natos-northern-flank" target="_blank">The War Zone</a>.</p>
+  </section>
+
+  <!-- ================= NEGOTIATIONS ================= -->
+  <section id="jednani">
+    <span class="eyebrow">07 / Mírová jednání</span>
+    <h2>Stručná časová osa</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Období</th><th>Událost</th></tr></thead>
+        <tbody>
+          <tr><td class="num">2022</td><td>Homyel (Bělorusko) a Istanbul — první kola jednání, bez dohody.</td></tr>
+          <tr><td class="num">2023–2024</td><td>Kodaň, Džidda, Švýcarsko — ukrajinský "mírový vzorec", komuniké o jaderné bezpečnosti a výměnách zajatců, žádný postup k příměří.</td></tr>
+          <tr><td class="num">srpen 2025</td><td>Summit na Aljašce — klíčový referenční bod pro další jednání.</td></tr>
+          <tr><td class="num">prosinec 2025</td><td>Po jednání s Trumpem Zelenskyj uvádí, že je dohodnuto "90 % potenciální mírové dohody" — otázka území zůstává hlavní překážkou.</td></tr>
+          <tr><td class="num">únor 2026</td><td>USA tlačí na uzavření dohody do června; jednání v Miami.</td></tr>
+          <tr><td class="num">březen 2026</td><td>Rusko zvažuje přerušení jednání, pokud Ukrajina neustoupí z Doněcké oblasti.</td></tr>
+          <tr><td class="num">11.–12. dubna 2026</td><td>Krátké 32hodinové příměří o velikonocích, iniciativa Zelenského.</td></tr>
+          <tr><td class="num">2026, průběžně</td><td>Výměny zajatců pokračují jako jediný funkční mechanismus i přes zablokovaná jednání o území a příměří.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Zdroje: <a href="https://neweasterneurope.eu/2026/04/02/the-hunt-for-peace-unsuccessful-attempts-to-mediate-ukrainian-russian-peace-from-2022-to-2026/" target="_blank">New Eastern Europe</a>, <a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10411/" target="_blank">UK Parliament Research Briefing</a>, <a href="https://www.japantimes.co.jp/news/2026/03/01/world/politics/russia-ukraine-peace-talks-territory/" target="_blank">Japan Times</a>, <a href="https://en.wikipedia.org/wiki/2026_Russo-Ukrainian_truce" target="_blank">Wikipedia — 2026 Russo-Ukrainian truce</a>.</p>
+  </section>
+
+  <!-- ================= SCENARIOS ================= -->
+  <section id="scenare">
+    <span class="eyebrow">08 / Scénáře vývoje (horizont 2027–2030)</span>
+    <h2>Tři cesty vpřed</h2>
+    <div class="scenario-grid">
+      <div class="scenario opt">
+        <h4>🟢 Optimistický</h4>
+        <span class="prob">Vyčerpání dřív než kolaps · nízká–střední pravděpodobnost</span>
+        <ul>
+          <li><b>Vojensky:</b> poměr ztrát dál v neprospěch Ruska, ofenzivy dál ztrácejí efektivitu, sovětské zásoby techniky se vyčerpávají rychleji než nová produkce nabíhá.</li>
+          <li><b>Ekonomicky:</b> rozpočtový deficit se prohlubuje, rezervní fond na pokraji vyčerpání, Kreml vyjednává z pozice slabosti.</li>
+          <li><b>Politicky:</b> ReArm Europe (840 mld. USD) dotažen do funkční kapacity, evropská soudržnost kompenzuje americké stažení, Čína pod tlakem omezuje dual-use export.</li>
+          <li><b>Výsledek:</b> příměří blízké současné linii bez uznání anexí, Rusko příliš oslabené na riziko konfliktu s NATO 5+ let.</li>
+        </ul>
+      </div>
+      <div class="scenario neu">
+        <h4>🟡 Neutrální</h4>
+        <span class="prob">Zamrzlý konflikt · nejpravděpodobnější dle většiny institucí</span>
+        <ul>
+          <li><b>Vojensky:</b> poziční válka pokračuje 1–3 roky, nebo vynucené příměří korejského typu bez mírové smlouvy.</li>
+          <li><b>Personálně/ekonomicky:</b> obě strany v chronickém, ne kolabujícím napětí; Rusko pomalu, ale ne náhle chudne.</li>
+          <li><b>USA:</b> pokračující postupné stahování se z role garanta bez úplného opuštění Ukrajiny.</li>
+          <li><b>Evropa:</b> přezbrojení pokračuje nerovnoměrně — Maďarsko/Slovensko/Bulharsko brzdí konsenzus, plná odstrašující kapacita přijde kolem 2029–2030.</li>
+          <li><b>Výsledek:</b> ani mír, ani eskalace do NATO — dlouhé provizorium s periodickými krizemi důvěry.</li>
+        </ul>
+      </div>
+      <div class="scenario pes">
+        <h4>🔴 Pesimistický</h4>
+        <span class="prob">Okno zranitelnosti · nejméně pravděpodobný, nejzávažnější</span>
+        <ul>
+          <li><b>Mechanismus:</b> příměří v Ukrajině + rychlá ruská rekonstituce (6–18 měsíců) + výrazný rozpad jednoty NATO — "perfektní bouře" dle ECFR.</li>
+          <li><b>USA:</b> opakování krize z března 2025 (pozastavení pomoci), tentokrát trvalejší; oslabení primární odstrašující funkce aliance.</li>
+          <li><b>Rusko:</b> rekonstituce rychlejší, než Západ čeká; může budovat sílu nad rámec předválečného stavu kvůli rozšíření NATO o Finsko a Švédsko.</li>
+          <li><b>Cíl testu:</b> Pobaltí — nejnepříznivější poměr sil, chybí strategická hloubka.</li>
+          <li><b>Akcelerátor:</b> souběžná krize (Tchaj-wan, Blízký východ) odčerpává americkou pozornost v kritickém okamžiku.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px;">Klíčové proměnné rozhodující směr: tempo evropského přezbrojení · míra americké angažovanosti · ochota Číny omezit dual-use export · skutečná rychlost vyčerpání ruských zásob techniky.</p>
+  </section>
+
+  <!-- ================= EASTERN FLANK ================= -->
+  <section id="vychodni-krídlo">
+    <span class="eyebrow">09 / Východní křídlo NATO</span>
+    <h2>Stav, zranitelnosti, plány</h2>
+
+    <div class="map-wrap">
+      <div class="map-note">SCHEMATICKÁ MAPA · nikoliv geograficky přesná · barva = výdaje na obranu jako % HDP 2026</div>
+      <div class="cartogram">
+        <div class="tile" style="grid-column:1/3;grid-row:1;"></div>
+        <div class="tile spend-mid" style="grid-column:1/3;grid-row:2;"><span class="cty">Norsko</span><span class="pct">n/a</span></div>
+        <div class="tile spend-vhigh" style="grid-column:3/5;grid-row:2;"><span class="cty">Finsko</span><span class="pct">vysoké</span></div>
+        <div class="tile spend-high" style="grid-column:1/3;grid-row:3;"><span class="cty">Švédsko</span><span class="pct">rám. stát FLF</span></div>
+        <div class="tile ru" style="grid-column:5/7;grid-row:1/3;">RUS<br>(Kola/Murmansk)</div>
+        <div class="tile spend-vhigh" style="grid-column:4/6;grid-row:3;"><span class="cty">Estonsko</span><span class="pct">5,4 %</span></div>
+        <div class="tile spend-vhigh" style="grid-column:4/6;grid-row:4;"><span class="cty">Lotyšsko</span><span class="pct">4,91 %</span></div>
+        <div class="tile spend-vhigh" style="grid-column:3/5;grid-row:5;"><span class="cty">Litva</span><span class="pct">5,38 %</span></div>
+        <div class="tile ru" style="grid-column:5/7;grid-row:4/6;">RUS<br>Kaliningrad<br>~12 000 voj.</div>
+        <div class="tile spend-high" style="grid-column:1/3;grid-row:5;"><span class="cty">Polsko</span><span class="pct">4,8 %</span></div>
+        <div class="tile by" style="grid-column:3/5;grid-row:6;">Bělorusko</div>
+        <div class="tile spend-mid" style="grid-column:1/2;grid-row:6;"><span class="cty">ČR</span><span class="pct">2,1 %</span></div>
+        <div class="tile spend-mid" style="grid-column:2/3;grid-row:6;"><span class="cty">Slovensko</span><span class="pct">~2,2 %</span></div>
+        <div class="tile ua" style="grid-column:4/7;grid-row:6/8;">UKRAJINA<br>(válečná zóna)</div>
+        <div class="tile spend-low" style="grid-column:1/3;grid-row:7;"><span class="cty">Maďarsko</span><span class="pct">n/a</span></div>
+        <div class="tile spend-mid" style="grid-column:2/4;grid-row:8;"><span class="cty">Rumunsko</span><span class="pct">roste</span></div>
+        <div class="tile spend-low" style="grid-column:2/4;grid-row:9;"><span class="cty">Bulharsko</span><span class="pct">~2 %</span></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:linear-gradient(135deg,#7a3129,#5c241e);"></i>&gt;5 % HDP</span>
+        <span><i style="background:linear-gradient(135deg,#8a651f,#6b4e18);"></i>4–5 % HDP</span>
+        <span><i style="background:linear-gradient(135deg,#345a73,#274456);"></i>2–3 % HDP</span>
+        <span><i style="background:linear-gradient(135deg,#3a4552,#2b333d);"></i>&lt;2 % / n/a</span>
+        <span><i style="background:#3a1512;"></i>Rusko</span>
+        <span><i style="background:#241a12;"></i>Bělorusko</span>
+        <span><i style="background:#12202b;"></i>Ukrajina</span>
+      </div>
+    </div>
+
+    <div class="bar-row">
+      <div class="label"><span>🇺🇦 Ztráty na čtvereční míli — 2025</span><b>200</b></div>
+      <div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--blue);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="label"><span>🇺🇦 Ztráty na čtvereční míli — první pol. 2026</span><b>9 600</b></div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red);"></div></div>
+    </div>
+    <p class="small">Ilustrace prudkého poklesu efektivity ruských ofenziv. Zdroj: Mick Ryan / Russia Matters, viz sekce 03.</p>
+
+    <h3>Země podle detailu</h3>
+    <div class="country-grid">
+
+      <div class="country">
+        <div class="head"><h4>🇵🇱 Polsko</h4><span class="gdp">4,8 % HDP</span></div>
+        <p>Program <b>East Shield</b> — 2,5 mld. USD, 700 km hranice s Ruskem/Běloruskem. Plán zdvojnásobit armádu na 300 000 vojáků.</p>
+        <div class="flag-note">Klíčová zranitelnost: Suwalská mezera — jediné pozemní spojení Pobaltí se zbytkem NATO, hlídané jen 2 silnicemi a 1 tratí.</div>
+      </div>
+
+      <div class="country">
+        <div class="head"><h4>🇨🇿 Česko</h4><span class="gdp">2,1 % HDP (2026)</span></div>
+        <p>Cíl 3 % do 2030. Rozpočet 2026 nižší, než plánovala předchozí vláda (2,35 %) — Babišova vláda škrtá přímé financování Ukrajiny, ponechává donorskou muniční iniciativu.</p>
+        <div class="flag-note">Náčelník GŠ Karel Řehka: Rusko zůstává "nejnaléhavějším rizikem v Evropě". Priorita: těžká mechanizovaná brigáda do 2026, zpožděné kontrakty CV90/Leopard 2A8.</div>
+      </div>
+
+      <div class="country">
+        <div class="head"><h4>🇸🇰 Slovensko</h4><span class="gdp">~2,2 % HDP</span></div>
+        <p>"Schizofrenie" zahraniční politiky: hostí NATO bojovou skupinu a jedná o hlídkování baltského nebe, zatímco premiér Fico opakovaně navštěvuje Moskvu.</p>
+        <div class="flag-note">GLOBSEC 2025: 32 % Slováků vidí Rusko jako partnera, 41 % by nebránilo zemi při napadení. Masové protesty proti proruské politice vlády.</div>
+      </div>
+
+      <div class="country">
+        <div class="head"><h4>🇭🇺 Maďarsko</h4><span class="gdp">politický zlom</span></div>
+        <p>Duben 2026: konec 16letého vládnutí Orbána. Nový premiér Péter Magyar (Tisza) obrací kurz ke konstruktivní spolupráci s EU/NATO.</p>
+        <div class="flag-note">Zásadní posun — Maďarsko přestává být systematickou brzdou sankcí a pomoci Ukrajině.</div>
+      </div>
+
+      <div class="country">
+        <div class="head"><h4>🇷🇴 Rumunsko</h4><span class="gdp">rostoucí</span></div>
+        <p>650 km hranice s Ukrajinou, desítky narušení vzdušného prostoru drony. Plynové pole Neptun Deep (těžba od 2027) jako strategický cíl ochrany.</p>
+        <div class="flag-note">Tlačí na vyhrazenou černomořskou misi NATO ("Eastern Sentry" od 9/2025).</div>
+      </div>
+
+      <div class="country">
+        <div class="head"><h4>🇧🇬 Bulharsko</h4><span class="gdp">~2 % HDP</span></div>
+        <p>Spolupráce s Rumunskem a Tureckem na obraně proti plovoucím minám v Černém moři.</p>
+        <div class="flag-note">Cvičení "Black Sea 2026" s Rumunskem a Tureckem koordinované Frontexem.</div>
+      </div>
+
+      <div class="country">
+        <div class="head"><h4>🇪🇪 Estonsko</h4><span class="gdp">5,4 % HDP</span></div>
+        <p>576 mil. USD na vojenskou infrastrukturu 2025–2028. Nová základna Camp Reedo — první od obnovení nezávislosti.</p>
+        <div class="flag-note">Součást Baltské obranné linie, 25,8 % rozpočtu jde na vybavení.</div>
+      </div>
+
+      <div class="country">
+        <div class="head"><h4>🇱🇻 Lotyšsko</h4><span class="gdp">4,91 % HDP</span></div>
+        <p>115 mil. USD na infrastrukturu 2025. Znovuzavedena branná povinnost.</p>
+        <div class="flag-note">35,5 % rozpočtu na vybavení — nad rámec NATO benchmarku.</div>
+      </div>
+
+      <div class="country">
+        <div class="head"><h4>🇱🇹 Litva</h4><span class="gdp">5,38 % HDP</span></div>
+        <p>1,2 mld. USD na zázemí pro spojenecké jednotky (dokončení 2027). Aktivována německá 45. tanková brigáda.</p>
+        <div class="flag-note">45,8 % rozpočtu na vybavení — nejvyšší podíl v regionu.</div>
+      </div>
+
+      <div class="country">
+        <div class="head"><h4>🇫🇮 Finsko</h4><span class="gdp">vysoké, roste</span></div>
+        <p>830 mil. hranice s Ruskem — po vstupu do NATO zdvojnásobila délku hranice aliance. Nová bojová skupina FLF Finland (6/2026), rámcový stát Švédsko.</p>
+        <div class="flag-note">Gen. Sami Nurmi: válka Rusko opotřebovává, odhad 3–5 let na zotavení po příměří, dekáda na plnou modernizaci. Dodávky F-35A od 2026.</div>
+      </div>
+
+      <div class="country">
+        <div class="head"><h4>🇸🇪 Švédsko</h4><span class="gdp">rámcový stát FLF</span></div>
+        <p>Velí bojové skupině FLF Finland (600–1 200 vojáků). Posílená obrana ostrova Gotland jako strategická opora Baltského moře.</p>
+        <div class="flag-note">Gripen flotila, expertíza v ponorkové válce a protiminové obraně.</div>
+      </div>
+
+    </div>
+
+    <h3>Souhrn zranitelností</h3>
+    <ul style="color:var(--text-dim);font-size:0.92rem;">
+      <li><b>Suwalská mezera</b> — nejcitovanější geografická slabina (Polsko + Pobaltí).</li>
+      <li><b>Politická fragmentace</b> — Slovensko zůstává hlavní brzdou konsenzu i po pádu Orbána v Maďarsku.</li>
+      <li><b>Nerovnoměrné tempo přezbrojení</b> — Pobaltí a Polsko investují nejvíc relativně k HDP, Česko postupuje výrazně opatrněji.</li>
+      <li><b>Nejistota ohledně USA</b> — opakovaně citovaný faktor napříč zdroji nutící státy plánovat "pro případ" oslabení americké záruky.</li>
+      <li><b>Černé moře jako druhá fronta</b> — Rumunsko a Bulharsko čelí hybridním hrozbám souběžně s pevninskou hrozbou na severu.</li>
+    </ul>
+  </section>
+
+  <!-- ================= SOURCES ================= -->
+  <section id="zdroje">
+    <span class="eyebrow">10 / Zdroje a OSINT</span>
+    <h2>Kompletní seznam odkazů</h2>
+    <p class="intro-text">Instituce, zpravodajství a živé OSINT sledovací účty na X/Twitter použité v této syntéze. Doporučeno ověřovat čísla napříč více zdroji vždy, ne spoléhat na jeden.</p>
+
+    <h3>📡 OSINT sledovací účty (X / Twitter)</h3>
+    <div class="osint-grid">
+      <div class="osint-card"><div class="handle"><a href="https://x.com/majakovsk73" target="_blank">@Majakovsk73</a></div><div class="desc">Italský OSINT analytik — denní frontové mapy a rozbory situace, sektor Kostiantynivka a další.</div></div>
+      <div class="osint-card"><div class="handle"><a href="https://x.com/IntelCrab" target="_blank">@IntelCrab</a></div><div class="desc">Justin Peden — jeden z nejsledovanějších OSINT analytiků, satelitní snímky, pohyby techniky.</div></div>
+      <div class="osint-card"><div class="handle"><a href="https://x.com/UAWeapons" target="_blank">@UAWeapons</a></div><div class="desc">Ukraine Weapons Tracker — dokumentace dodávek a nasazení zbraňových systémů.</div></div>
+      <div class="osint-card"><div class="handle"><a href="https://x.com/TheStudyofWar" target="_blank">@TheStudyofWar</a></div><div class="desc">Institute for the Study of War — denní hodnocení fronty, referenční zdroj pro západní analytiky.</div></div>
+      <div class="osint-card"><div class="handle"><a href="https://x.com/wartranslated" target="_blank">@wartranslated</a></div><div class="desc">Překlady ruských a ukrajinských telegram/vojenských zdrojů do angličtiny.</div></div>
+      <div class="osint-card"><div class="handle"><a href="https://x.com/Tatarigami_UA" target="_blank">@Tatarigami_UA</a></div><div class="desc">Bývalý ukrajinský důstojník, analytické vlákna o taktice a stavu fronty.</div></div>
+      <div class="osint-card"><div class="handle"><a href="https://x.com/RALee85" target="_blank">@RALee85</a></div><div class="desc">Dlouhodobý OSINT komentátor se zaměřením na eskalační dynamiku.</div></div>
+      <div class="osint-card"><div class="handle"><a href="https://x.com/osinttechnical" target="_blank">@osinttechnical</a></div><div class="desc">Geolokace a analýza satelitních/obrazových dat, verifikace incidentů.</div></div>
+    </div>
+
+    <h3>🏛️ Instituce a think-tanky</h3>
+    <ul class="src-list">
+      <li><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS — Russian Blood and Treasure</a></li>
+      <li><a href="https://www.russiamatters.org/news/russia-ukraine-war-report-card/russia-ukraine-war-report-card-july-22-2026" target="_blank">Russia Matters — War Report Card</a></li>
+      <li><a href="https://www.russiamatters.org/blog/russia-losing-more-soldiers-ukraine-its-recruiting" target="_blank">Russia Matters — Losing more than recruiting?</a></li>
+      <li><a href="https://www.rand.org/pubs/research_briefs/RBA2713-2.html" target="_blank">RAND — Russian Military Reconstitution</a></li>
+      <li><a href="https://carnegieendowment.org/research/2024/09/russian-military-reconstitution-2030-pathways-and-prospects" target="_blank">Carnegie — Reconstitution 2030 Pathways</a></li>
+      <li><a href="https://carnegieendowment.org/research/2026/03/ukraine-military-russia-war-manpower-recruitment" target="_blank">Carnegie — Ukraine's Manpower Challenge</a></li>
+      <li><a href="https://carnegieendowment.org/russia-eurasia/politika/2026/05/baltics-nato-defense-russia" target="_blank">Carnegie — Baltic States</a></li>
+      <li><a href="https://carnegieendowment.org/russia-eurasia/politika/2026/05/central-europe-russia-strategy" target="_blank">Carnegie — Central Europe's Russia Policy</a></li>
+      <li><a href="https://ecfr.eu/article/the-ticking-clock-why-natos-deterrence-against-russia-is-under-pressure/" target="_blank">ECFR — The Ticking Clock</a></li>
+      <li><a href="https://ecfr.eu/article/funding-war-courting-crisis-why-chinas-support-for-russia-requires-a-european-response/" target="_blank">ECFR — China's Support for Russia</a></li>
+      <li><a href="https://www.atlanticcouncil.org/in-depth-research-reports/report/nato-russia-dynamics-prospects-for-reconstitution-of-russian-military-power/" target="_blank">Atlantic Council — NATO-Russia Dynamics</a></li>
+      <li><a href="https://www.iiss.org/online-analysis/military-balance/2026/04/attrition-and-adaptation-ukraines-evolving-war-effort/" target="_blank">IISS — Attrition and Adaptation</a></li>
+      <li><a href="https://www.iiss.org/publications/the-military-balance/2026/the-military-balance-2026/fortifying-natos-eastern-flank/" target="_blank">IISS — Fortifying NATO's Eastern Flank</a></li>
+      <li><a href="https://www.belfercenter.org/research-analysis/russia-nato-baltics-scenarios-europe-security" target="_blank">Belfer Center — Russian Threats to Eastern Flank</a></li>
+      <li><a href="https://www.heritage.org/military-strength/assessing-threats-us-vital-interests/russia" target="_blank">Heritage Foundation — Russia</a></li>
+      <li><a href="https://www.foreignaffairs.com/russia/next-russia-threat-michael-kofman" target="_blank">Foreign Affairs — The Next Russia Threat</a></li>
+      <li><a href="https://www.osw.waw.pl/en/publikacje/osw-commentary/2025-12-09/russias-2026-budget-mounting-financial-challenges-and-economic" target="_blank">OSW — Russia's 2026 Budget</a></li>
+      <li><a href="https://www.bruegel.org/sites/default/files/2025-12/WP%2032_1.pdf" target="_blank">Bruegel — Russian Economy Resilience</a></li>
+      <li><a href="https://cepa.org/comprehensive-reports/wartime-assistance-to-ukraine-the-successes-failures-and-future-prospects-of-us-and-eu-support-models/" target="_blank">CEPA — Wartime Assistance to Ukraine</a></li>
+    </ul>
+
+    <h3>📰 Zpravodajství a datové projekty</h3>
+    <ul class="src-list">
+      <li><a href="https://en.zona.media/article/2026/08/14/casualties_eng-trl" target="_blank">Mediazona — Russian Losses (jmenovitý tracker)</a></li>
+      <li><a href="https://index.minfin.com.ua/en/russian-invading/casualties/" target="_blank">Minfin.index — ukrajinský GŠ, denní data</a></li>
+      <li><a href="https://kyivindependent.com/russia-records-highest-monthly-losses-of-2026/" target="_blank">Kyiv Independent</a></li>
+      <li><a href="https://www.cnn.com/2026/07/02/world/russia-war-casualities-ukraine-2-million-intl" target="_blank">CNN — Bloodier than Stalingrad</a></li>
+      <li><a href="https://wardeathdata.com/russia-ukraine-war-death-toll-2026/" target="_blank">WarDeathData.com</a></li>
+      <li><a href="https://factually.co/fact-checks/military/russia-ukraine-war-casualty-figures-2026-d084ab" target="_blank">Factually.co — Casualty Fact-checks</a></li>
+      <li><a href="https://liveuamap.com/" target="_blank">LiveUAmap — interaktivní mapa fronty</a></li>
+      <li><a href="https://united24media.com/war-in-ukraine" target="_blank">United24 Media</a></li>
+      <li><a href="https://euromaidanpress.com/" target="_blank">Euromaidan Press</a></li>
+      <li><a href="https://verstka.media/how-russias-defense-ministry-has-been-reporting-on-the-war-for-four-years" target="_blank">Verstka — jak ruské MO reportuje</a></li>
+      <li><a href="https://euvsdisinfo.eu/report/ukraine-has-lost-15-million-soldiers-since-2022-half-a-million-in-2025-alone/" target="_blank">EUvsDisinfo — fact-check 1,5M</a></li>
+      <li><a href="https://www.euronews.com/2025/08/27/verifying-russian-propagandists-claim-that-ukraine-has-lost-17-million-soldiers" target="_blank">Euronews — ověření 1,7M claimu</a></li>
+      <li><a href="https://www.themoscowtimes.com/2026/01/02/russias-economy-in-2026-more-war-slower-growth-and-higher-taxes-a91579" target="_blank">Moscow Times — ruská ekonomika 2026</a></li>
+    </ul>
+
+    <h3>🌐 Oficiální a mezivládní zdroje</h3>
+    <ul class="src-list">
+      <li><a href="https://www.nato.int/en/what-we-do/deterrence-and-defence/strengthening-natos-eastern-flank" target="_blank">NATO — Strengthening the Eastern Flank</a></li>
+      <li><a href="https://www.nato.int/en/what-we-do/deterrence-and-defence/arctic-security" target="_blank">NATO — Arctic Security</a></li>
+      <li><a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10411/" target="_blank">UK Parliament — Ukraine Peace Talks Briefing</a></li>
+      <li><a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10308/" target="_blank">UK Parliament — Military Assistance to Ukraine</a></li>
+      <li><a href="https://www.statista.com/statistics/1293492/ukrainewarcasualties" target="_blank">Statista / OHCHR — civilní ztráty</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p><b>Metodologická výhrada:</b> tento dokument je syntéza veřejně dostupných zdrojů (OSINT), ne zpravodajský produkt. Čísla obou válčících stran nelze nezávisle verifikovat; uváděné rozptyly odrážejí skutečnou nejistotu, ne chybu sestavovatele. Kde je zdroj označen jako propagandistický nebo nepodložený, je uveden pro úplnost obrazu, ne jako fakt. Data odpovídají stavu k 25. srpnu 2026 a budou se dále vyvíjet.</p>
+    <p>Sestaveno pomocí webového vyhledávání a syntézy Claude (Anthropic) na základě konverzace s uživatelem. Doporučeno křížově ověřovat u primárních zdrojů před dalším šířením.</p>
+  </footer>
+
+</main>
+</div>
+</body>
+</html>
