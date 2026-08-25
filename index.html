@@ -6,25 +6,28 @@
 <title>SITREP // Rusko–Ukrajina 2026 · Nezávislá OSINT syntéza</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 :root{
-  --bg:#0b0f14;
-  --panel:#121820;
-  --panel-alt:#171f29;
-  --border:#2a3441;
-  --border-soft:#1e2733;
-  --text:#dbe2ea;
-  --text-dim:#8b98a8;
-  --text-faint:#5b6878;
-  --amber:#c98a2c;
-  --amber-soft:#8a651f;
-  --red:#b0453a;
-  --red-soft:#7a3129;
-  --green:#5c8a68;
-  --green-soft:#3f5f48;
-  --blue:#4a7fa3;
-  --blue-soft:#345a73;
-  --grey-tile:#242d38;
+  --bg:#eef1ec;
+  --panel:#ffffff;
+  --panel-alt:#e7ebe3;
+  --border:#cfd6c9;
+  --border-soft:#dde3d7;
+  --text:#1c2420;
+  --text-dim:#57625a;
+  --text-faint:#8a948b;
+  --amber:#9c6b1f;
+  --amber-soft:#e3d3ab;
+  --red:#9c3b30;
+  --red-soft:#e6cdc8;
+  --green:#3f6b4a;
+  --green-soft:#cfe0d3;
+  --blue:#2f5c7a;
+  --blue-soft:#cddce4;
+  --grey-tile:#c7cec1;
+  --ink:#121813;
 }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -37,11 +40,11 @@ body{
   line-height:1.65;
   -webkit-font-smoothing:antialiased;
 }
-::selection{background:var(--amber-soft);color:#fff;}
+::selection{background:var(--amber-soft);color:var(--ink);}
 a{color:var(--amber);text-decoration:none;border-bottom:1px solid var(--amber-soft);}
-a:hover{color:#e0a94a;border-bottom-color:#e0a94a;}
+a:hover{color:#7a5417;border-bottom-color:#7a5417;}
 .mono{font-family:'IBM Plex Mono',monospace;}
-h1,h2,h3,h4{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:0.02em;margin:0;color:#f0f3f6;}
+h1,h2,h3,h4{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:0.02em;margin:0;color:var(--ink);}
 p{margin:0 0 1em 0;color:var(--text);}
 small,.small{font-size:0.85em;color:var(--text-dim);}
 
@@ -55,11 +58,11 @@ nav.toc{
   height:100vh;overflow-y:auto;
   padding:28px 20px 40px 24px;
   border-right:1px solid var(--border-soft);
-  background:linear-gradient(180deg,#0d1319,#0a0e13);
+  background:#e7ebe3;
 }
 @media (max-width:960px){nav.toc{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--border-soft);padding:20px;}}
 .toc-brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
-.toc-brand .dot{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2.4s infinite;}
+.toc-brand .dot{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 6px rgba(156,59,48,0.5);animation:pulse 2.4s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
 .toc-brand span{font-family:'Oswald';font-size:0.78rem;letter-spacing:0.14em;color:var(--text-dim);text-transform:uppercase;}
 nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc;}
@@ -74,7 +77,7 @@ nav.toc a::before{
   content:counter(toc,decimal-leading-zero);
   font-family:'IBM Plex Mono';font-size:0.76rem;color:var(--text-faint);
 }
-nav.toc a:hover{background:var(--panel-alt);color:#fff;}
+nav.toc a:hover{background:#fff;color:var(--ink);}
 nav.toc .toc-foot{margin-top:24px;padding-top:16px;border-top:1px solid var(--border-soft);font-size:0.72rem;color:var(--text-faint);line-height:1.5;}
 
 /* ===== Main column ===== */
@@ -86,21 +89,21 @@ main{padding:0 0 80px 0;}
   padding:56px 48px 44px 48px;
   border-bottom:1px solid var(--border-soft);
   background:
-    radial-gradient(ellipse at top right, rgba(201,138,44,0.08), transparent 60%),
-    repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
+    radial-gradient(ellipse at top right, rgba(156,107,31,0.10), transparent 60%),
+    repeating-linear-gradient(115deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0.012) 1px, transparent 1px, transparent 3px);
   overflow:hidden;
 }
 @media (max-width:640px){.cover{padding:36px 20px;}}
 .stamp{
   display:inline-flex;align-items:center;gap:8px;
-  border:1px solid var(--red-soft);color:#e0938a;
+  border:1px solid var(--red);color:var(--red);
   font-family:'IBM Plex Mono';font-size:0.72rem;letter-spacing:0.12em;
   padding:5px 10px;border-radius:2px;text-transform:uppercase;
-  background:rgba(176,69,58,0.08);
+  background:rgba(156,59,48,0.07);
   transform:rotate(-1deg);
   margin-bottom:22px;
 }
-.cover h1{font-size:2.6rem;line-height:1.08;max-width:820px;color:#fff;}
+.cover h1{font-size:2.6rem;line-height:1.08;max-width:820px;color:var(--ink);}
 @media (max-width:640px){.cover h1{font-size:1.9rem;}}
 .cover .lede{max-width:680px;color:var(--text-dim);font-size:1.05rem;margin-top:16px;}
 .cover-meta{
@@ -108,7 +111,7 @@ main{padding:0 0 80px 0;}
   font-family:'IBM Plex Mono';font-size:0.78rem;color:var(--text-dim);
 }
 .cover-meta div span{display:block;color:var(--text-faint);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px;}
-.cover-meta div b{color:#fff;font-weight:500;}
+.cover-meta div b{color:var(--ink);font-weight:500;}
 
 /* ===== Sections ===== */
 section{padding:44px 48px;border-bottom:1px solid var(--border-soft);}
@@ -117,20 +120,21 @@ section{padding:44px 48px;border-bottom:1px solid var(--border-soft);}
   font-family:'IBM Plex Mono';font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;
   color:var(--amber);margin-bottom:8px;display:block;
 }
-section h2{font-size:1.7rem;color:#fff;margin-bottom:14px;}
-section h3{font-size:1.08rem;color:#f0f3f6;margin:26px 0 10px 0;}
+section h2{font-size:1.7rem;color:var(--ink);margin-bottom:14px;}
+section h3{font-size:1.08rem;color:var(--ink);margin:26px 0 10px 0;}
 .intro-text{max-width:760px;color:var(--text-dim);}
 
 .callout{
-  border-left:3px solid var(--amber-soft);
+  border-left:3px solid var(--amber);
   background:var(--panel);
+  box-shadow:0 1px 3px rgba(0,0,0,0.06);
   padding:14px 18px;margin:18px 0;border-radius:0 4px 4px 0;
   font-size:0.92rem;color:var(--text-dim);
 }
 .callout b{color:var(--text);}
 
 /* ===== Tables ===== */
-.table-wrap{overflow-x:auto;margin:18px 0 8px 0;border:1px solid var(--border-soft);border-radius:6px;}
+.table-wrap{overflow-x:auto;margin:18px 0 8px 0;border:1px solid var(--border-soft);border-radius:6px;background:var(--panel);}
 table{width:100%;border-collapse:collapse;font-size:0.88rem;min-width:560px;}
 thead th{
   text-align:left;font-family:'IBM Plex Mono';font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;
@@ -138,33 +142,33 @@ thead th{
 }
 tbody td{padding:10px 14px;border-bottom:1px solid var(--border-soft);vertical-align:top;color:var(--text);}
 tbody tr:last-child td{border-bottom:none;}
-tbody tr:hover{background:rgba(255,255,255,0.02);}
-td.num{font-family:'IBM Plex Mono';color:#fff;white-space:nowrap;}
+tbody tr:hover{background:rgba(0,0,0,0.025);}
+td.num{font-family:'IBM Plex Mono';color:var(--ink);font-weight:500;white-space:nowrap;}
 td.src a{font-size:0.78rem;}
 .tag{display:inline-block;font-family:'IBM Plex Mono';font-size:0.68rem;padding:2px 7px;border-radius:20px;letter-spacing:0.03em;}
-.tag-low{background:rgba(92,138,104,0.15);color:#8fc09b;border:1px solid var(--green-soft);}
-.tag-mid{background:rgba(201,138,44,0.15);color:#e0af6a;border:1px solid var(--amber-soft);}
-.tag-high{background:rgba(176,69,58,0.15);color:#e0938a;border:1px solid var(--red-soft);}
-.tag-disinfo{background:rgba(176,69,58,0.25);color:#ffb3a8;border:1px solid var(--red);}
+.tag-low{background:rgba(63,107,74,0.12);color:#2d5038;border:1px solid var(--green);}
+.tag-mid{background:rgba(156,107,31,0.12);color:#7a5417;border:1px solid var(--amber);}
+.tag-high{background:rgba(156,59,48,0.12);color:#7a2e25;border:1px solid var(--red);}
+.tag-disinfo{background:rgba(156,59,48,0.2);color:#7a2e25;border:1px solid var(--red);font-weight:600;}
 
 /* ===== Bar rows (simple css bar chart) ===== */
 .bar-row{margin:14px 0;}
 .bar-row .label{display:flex;justify-content:space-between;font-family:'IBM Plex Mono';font-size:0.78rem;color:var(--text-dim);margin-bottom:5px;}
-.bar-row .label b{color:#fff;font-weight:500;}
+.bar-row .label b{color:var(--ink);font-weight:500;}
 .bar-track{height:10px;background:var(--panel-alt);border-radius:4px;overflow:hidden;border:1px solid var(--border-soft);}
 .bar-fill{height:100%;border-radius:4px;}
 
 /* ===== Stat grid ===== */
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0;}
-.stat-card{background:var(--panel);border:1px solid var(--border-soft);border-radius:6px;padding:16px 18px;}
-.stat-card .n{font-family:'Oswald';font-size:1.7rem;color:#fff;line-height:1;}
+.stat-card{background:var(--panel);border:1px solid var(--border-soft);border-radius:6px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.stat-card .n{font-family:'Oswald';font-size:1.7rem;color:var(--ink);line-height:1;}
 .stat-card .l{font-size:0.78rem;color:var(--text-dim);margin-top:6px;}
 .stat-card .s{font-size:0.7rem;color:var(--text-faint);margin-top:4px;}
 
 /* ===== Scenario cards ===== */
 .scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;}
 @media (max-width:900px){.scenario-grid{grid-template-columns:1fr;}}
-.scenario{border:1px solid var(--border);border-radius:8px;padding:20px;background:var(--panel);position:relative;}
+.scenario{border:1px solid var(--border);border-radius:8px;padding:20px;background:var(--panel);box-shadow:0 1px 3px rgba(0,0,0,0.05);position:relative;}
 .scenario.opt{border-top:3px solid var(--green);}
 .scenario.neu{border-top:3px solid var(--amber);}
 .scenario.pes{border-top:3px solid var(--red);}
@@ -174,44 +178,45 @@ td.src a{font-size:0.78rem;}
 .scenario li{margin-bottom:8px;}
 .scenario li b{color:var(--text);}
 
-/* ===== Map / cartogram ===== */
+/* ===== Map ===== */
 .map-wrap{
   margin:24px 0;background:var(--panel);border:1px solid var(--border-soft);border-radius:8px;
-  padding:24px;position:relative;
+  padding:24px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.06);
 }
 .map-note{font-size:0.74rem;color:var(--text-faint);margin-bottom:16px;font-family:'IBM Plex Mono';}
-.cartogram{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  grid-auto-rows:52px;
-  gap:6px;
-  max-width:640px;
+#nato-map{width:100%;height:640px;border-radius:6px;background:#dde3d7;border:1px solid var(--border-soft);}
+@media (max-width:640px){#nato-map{height:460px;}}
+.leaflet-popup-content-wrapper{background:#fff;color:var(--text);border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.15);}
+.leaflet-popup-content{font-family:'IBM Plex Sans';font-size:0.85rem;margin:12px 14px;line-height:1.5;}
+.leaflet-popup-content b{font-family:'Oswald';color:var(--ink);}
+.leaflet-popup-tip{background:#fff;}
+.leaflet-popup-content .gdp-line{font-family:'IBM Plex Mono';color:var(--amber);font-size:0.82rem;margin:4px 0 6px 0;font-weight:600;}
+.map-tag{
+  font-family:'IBM Plex Mono';font-weight:600;font-size:0.72rem;color:var(--ink);
+  background:rgba(255,255,255,0.92);border:1px solid rgba(0,0,0,0.15);
+  padding:2px 7px;border-radius:3px;box-shadow:0 1px 3px rgba(0,0,0,0.15);white-space:nowrap;
 }
-.tile{
-  border-radius:4px;padding:6px 8px;font-family:'IBM Plex Mono';
-  display:flex;flex-direction:column;justify-content:center;
-  border:1px solid rgba(255,255,255,0.06);
-  font-size:0.72rem;color:#fff;position:relative;
-}
-.tile .pct{font-size:0.95rem;font-weight:600;}
-.tile .cty{font-size:0.66rem;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:0.04em;}
-.tile.ru{background:repeating-linear-gradient(45deg,#3a1512,#3a1512 6px,#2c100e 6px,#2c100e 12px);border-color:#5a1f1a;color:#e0938a;justify-content:center;align-items:center;font-size:0.62rem;text-align:center;}
-.tile.by{background:#241a12;border-color:#3d2c1a;color:#a08560;justify-content:center;align-items:center;font-size:0.6rem;text-align:center;}
-.tile.ua{background:#12202b;border-color:#1e3a4d;color:#6fa8c9;justify-content:center;align-items:center;font-size:0.62rem;text-align:center;}
-.tile.spend-vhigh{background:linear-gradient(135deg,#7a3129,#5c241e);}
-.tile.spend-high{background:linear-gradient(135deg,#8a651f,#6b4e18);}
-.tile.spend-mid{background:linear-gradient(135deg,#345a73,#274456);}
-.tile.spend-low{background:linear-gradient(135deg,#3a4552,#2b333d);}
+.leaflet-tooltip::before{display:none;}
 .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px;font-size:0.72rem;color:var(--text-dim);font-family:'IBM Plex Mono';}
 .legend span{display:inline-flex;align-items:center;gap:6px;}
-.legend i{width:12px;height:12px;border-radius:3px;display:inline-block;}
+.legend i{width:12px;height:12px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,0.15);}
+.map-figure{margin:24px 0;}
+.map-figure img{width:100%;border-radius:8px;border:1px solid var(--border-soft);display:block;background:#fff;}
+.map-figure figcaption{font-size:0.76rem;color:var(--text-faint);margin-top:8px;font-family:'IBM Plex Mono';}
+.map-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+.map-links a{
+  border:1px solid var(--border);background:var(--panel);color:var(--text-dim);
+  padding:7px 13px;border-radius:20px;font-size:0.78rem;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.map-links a:hover{color:var(--amber);border-color:var(--amber);}
 
 /* ===== Country cards ===== */
 .country-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:20px;}
-.country{background:var(--panel);border:1px solid var(--border-soft);border-radius:8px;padding:18px 20px;}
+.country{background:var(--panel);border:1px solid var(--border-soft);border-radius:8px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
 .country .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
 .country .head h4{font-size:1rem;}
-.country .head .gdp{font-family:'IBM Plex Mono';font-size:0.85rem;color:var(--amber);}
+.country .head .gdp{font-family:'IBM Plex Mono';font-size:0.85rem;color:var(--amber);font-weight:600;}
 .country p{font-size:0.85rem;color:var(--text-dim);margin-bottom:6px;}
 .country .flag-note{font-size:0.7rem;color:var(--text-faint);border-top:1px solid var(--border-soft);margin-top:10px;padding-top:8px;}
 
@@ -219,9 +224,10 @@ td.src a{font-size:0.78rem;}
 .osint-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:16px;}
 .osint-card{
   border:1px solid var(--border-soft);background:var(--panel);border-radius:6px;padding:14px 16px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
   display:flex;flex-direction:column;gap:4px;
 }
-.osint-card .handle{font-family:'IBM Plex Mono';color:#fff;font-size:0.9rem;}
+.osint-card .handle{font-family:'IBM Plex Mono';color:var(--ink);font-size:0.9rem;font-weight:600;}
 .osint-card .handle a{border:none;}
 .osint-card .desc{font-size:0.78rem;color:var(--text-dim);}
 
@@ -330,7 +336,7 @@ footer b{color:var(--text-dim);}
           <tr><td>Padlí (CSIS)</td><td class="num">100 000–150 000</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td><span class="tag tag-mid">modelový odhad</span></td></tr>
           <tr><td>Nezvěstní (MIA)</td><td class="num">84 568 (duben 2025)</td><td class="src"><a href="https://www.russiamatters.org/news/russia-ukraine-war-report-card/russia-ukraine-war-report-card-july-22-2026" target="_blank">Russia Matters</a></td><td><span class="tag tag-mid">koordinační centrála UA</span></td></tr>
           <tr><td>Zajatí (vráceno od 2022)</td><td class="num">9 716 osob / 76+ výměn</td><td class="src"><a href="https://united24media.com/war-in-ukraine/nearly-10000-ukrainians-have-returned-from-russian-captivity-since-2022-21839" target="_blank">United24 Media</a></td><td><span class="tag tag-low">potvrzené počty</span></td></tr>
-          <tr><td>Celkové ztráty (K+W+MIA)</td><td class="num">500 000–625 000</td><td class="src"><a href="https://www.russiamatters.org/news/russia-ukraine-war-report-card/russia-ukraine-war-report-card-july-22-2026" target="_blank">Russia Matters / FT</a></td><td><span class="tag tag-mid">західní odhad</span></td></tr>
+          <tr><td>Celkové ztráty (K+W+MIA)</td><td class="num">500 000–625 000</td><td class="src"><a href="https://www.russiamatters.org/news/russia-ukraine-war-report-card/russia-ukraine-war-report-card-july-22-2026" target="_blank">Russia Matters / FT</a></td><td><span class="tag tag-mid">západní odhad</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -374,6 +380,18 @@ footer b{color:var(--text-dim);}
     <span class="eyebrow">03 / Ztráty techniky</span>
     <h2>Ruská technika ztracená dle ukrajinského generálního štábu</h2>
     <p class="intro-text">Kumulativně k 24. 8. 2026. Ukrajinský zdroj — brát s rezervou, ale trend (masivní úbytek) potvrzují i nezávislé zdroje (Foreign Affairs/Kofman, Oryx metodika).</p>
+
+    <h3>Mapa bojiště — aktuální kontrola území</h3>
+    <figure class="map-figure">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/2022_Russian_invasion_of_Ukraine.svg" alt="Mapa kontroly území v rusko-ukrajinské válce" loading="lazy">
+      <figcaption>Zdroj: Wikimedia Commons, průběžně aktualizovaná mapa (CC BY-SA 4.0) — sestavena z dat ISW/Critical Threats Project a dalších OSINT zdrojů. Obrázek se načítá vždy v nejaktuálnější verzi souboru. <a href="https://commons.wikimedia.org/wiki/File:2022_Russian_invasion_of_Ukraine.svg" target="_blank">Zdrojová stránka a historie verzí →</a></figcaption>
+    </figure>
+    <div class="map-links">
+      <a href="https://www.criticalthreats.org/analysis/ukraine-conflict-updates-ctp-isw" target="_blank">🗺️ ISW / Critical Threats — interaktivní mapa</a>
+      <a href="https://deepstatemap.live/" target="_blank">🗺️ DeepStateMap.Live — ukrajinský OSINT tracker</a>
+      <a href="https://liveuamap.com/" target="_blank">🗺️ LiveUAmap — mapa v reálném čase</a>
+      <a href="https://www.understandingwar.org/backgrounder/ukraine-conflict-updates" target="_blank">📄 ISW — denní textové updaty</a>
+    </div>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Kategorie</th><th>Počet</th><th>Denní přírůstek (24.8.)</th></tr></thead>
@@ -525,34 +543,15 @@ footer b{color:var(--text-dim);}
     <h2>Stav, zranitelnosti, plány</h2>
 
     <div class="map-wrap">
-      <div class="map-note">SCHEMATICKÁ MAPA · nikoliv geograficky přesná · barva = výdaje na obranu jako % HDP 2026</div>
-      <div class="cartogram">
-        <div class="tile" style="grid-column:1/3;grid-row:1;"></div>
-        <div class="tile spend-mid" style="grid-column:1/3;grid-row:2;"><span class="cty">Norsko</span><span class="pct">n/a</span></div>
-        <div class="tile spend-vhigh" style="grid-column:3/5;grid-row:2;"><span class="cty">Finsko</span><span class="pct">vysoké</span></div>
-        <div class="tile spend-high" style="grid-column:1/3;grid-row:3;"><span class="cty">Švédsko</span><span class="pct">rám. stát FLF</span></div>
-        <div class="tile ru" style="grid-column:5/7;grid-row:1/3;">RUS<br>(Kola/Murmansk)</div>
-        <div class="tile spend-vhigh" style="grid-column:4/6;grid-row:3;"><span class="cty">Estonsko</span><span class="pct">5,4 %</span></div>
-        <div class="tile spend-vhigh" style="grid-column:4/6;grid-row:4;"><span class="cty">Lotyšsko</span><span class="pct">4,91 %</span></div>
-        <div class="tile spend-vhigh" style="grid-column:3/5;grid-row:5;"><span class="cty">Litva</span><span class="pct">5,38 %</span></div>
-        <div class="tile ru" style="grid-column:5/7;grid-row:4/6;">RUS<br>Kaliningrad<br>~12 000 voj.</div>
-        <div class="tile spend-high" style="grid-column:1/3;grid-row:5;"><span class="cty">Polsko</span><span class="pct">4,8 %</span></div>
-        <div class="tile by" style="grid-column:3/5;grid-row:6;">Bělorusko</div>
-        <div class="tile spend-mid" style="grid-column:1/2;grid-row:6;"><span class="cty">ČR</span><span class="pct">2,1 %</span></div>
-        <div class="tile spend-mid" style="grid-column:2/3;grid-row:6;"><span class="cty">Slovensko</span><span class="pct">~2,2 %</span></div>
-        <div class="tile ua" style="grid-column:4/7;grid-row:6/8;">UKRAJINA<br>(válečná zóna)</div>
-        <div class="tile spend-low" style="grid-column:1/3;grid-row:7;"><span class="cty">Maďarsko</span><span class="pct">n/a</span></div>
-        <div class="tile spend-mid" style="grid-column:2/4;grid-row:8;"><span class="cty">Rumunsko</span><span class="pct">roste</span></div>
-        <div class="tile spend-low" style="grid-column:2/4;grid-row:9;"><span class="cty">Bulharsko</span><span class="pct">~2 %</span></div>
-      </div>
+      <div class="map-note">SKUTEČNÁ MAPA (OpenStreetMap · Leaflet) · barva bodu = výdaje na obranu jako % HDP 2026 · klikni na zemi pro detail, popisky jsou vždy viditelné</div>
+      <div id="nato-map"></div>
       <div class="legend">
-        <span><i style="background:linear-gradient(135deg,#7a3129,#5c241e);"></i>&gt;5 % HDP</span>
-        <span><i style="background:linear-gradient(135deg,#8a651f,#6b4e18);"></i>4–5 % HDP</span>
-        <span><i style="background:linear-gradient(135deg,#345a73,#274456);"></i>2–3 % HDP</span>
-        <span><i style="background:linear-gradient(135deg,#3a4552,#2b333d);"></i>&lt;2 % / n/a</span>
-        <span><i style="background:#3a1512;"></i>Rusko</span>
-        <span><i style="background:#241a12;"></i>Bělorusko</span>
-        <span><i style="background:#12202b;"></i>Ukrajina</span>
+        <span><i style="background:#9c3b30;"></i>&gt;5 % HDP</span>
+        <span><i style="background:#9c6b1f;"></i>4–5 % HDP</span>
+        <span><i style="background:#2f5c7a;"></i>2–3 % HDP</span>
+        <span><i style="background:#6b7568;"></i>&lt;2 % / n/a</span>
+        <span><i style="background:#6e1f16;"></i>Rusko</span>
+        <span><i style="background:#c9962c;border-radius:2px;transform:rotate(45deg);"></i>Suwalská mezera (zranitelnost)</span>
       </div>
     </div>
 
@@ -722,5 +721,78 @@ footer b{color:var(--text-dim);}
 
 </main>
 </div>
+
+<script>
+(function(){
+  var map = L.map('nato-map', {scrollWheelZoom:false, minZoom:3, maxZoom:8});
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap contributors, © CARTO',
+    maxZoom: 19
+  }).addTo(map);
+
+  function colorFor(tier){
+    return {vhigh:'#9c3b30', high:'#9c6b1f', mid:'#2f5c7a', low:'#6b7568', ru:'#6e1f16', ua:'#3a4a55'}[tier];
+  }
+
+  var markers = [];
+  var allPoints = [];
+
+  function addPoint(lat,lon,tier,radius,label,html,dir){
+    var m = L.circleMarker([lat,lon],{
+      radius:radius, color:'#fff', weight:2, fillColor:colorFor(tier), fillOpacity:0.92
+    }).addTo(map).bindPopup(html || label)
+      .bindTooltip(label,{permanent:true,direction:dir||'right',offset:(dir==='left'?[-10,0]:[10,0]),className:'map-tag'});
+    markers.push(m);
+    allPoints.push([lat,lon]);
+    return m;
+  }
+
+  // --- Severní křídlo ---
+  addPoint(69.73,30.05,'low',7,'Norsko','<b>Norsko</b><div class="gdp-line">výdaje: n/a</div>Dlouhá hranice s Kola poloostrovem, sdílí severní frontu s Finskem.','left');
+  addPoint(66.5,25.7,'high',9,'Finsko','<b>Finsko</b><div class="gdp-line">výdaje: vysoké, rostoucí</div>830 km hranice s Ruskem — po vstupu do NATO zdvojnásobilo délku hranice aliance. Nová bojová skupina FLF Finland (6/2026).','right');
+  addPoint(59.33,18.06,'high',9,'Švédsko','<b>Švédsko</b><div class="gdp-line">rámcový stát FLF Finland</div>Velí bojové skupině (600–1200 vojáků), posílená obrana ostrova Gotland.','left');
+
+  // --- Pobaltí ---
+  addPoint(59.44,24.75,'vhigh',10,'Estonsko','<b>Estonsko</b><div class="gdp-line">5,4 % HDP (2026)</div>576 mil. USD na infrastrukturu 2025–2028, nová základna Camp Reedo.','right');
+  addPoint(56.95,24.11,'vhigh',10,'Lotyšsko','<b>Lotyšsko</b><div class="gdp-line">4,91 % HDP (2026)</div>Znovuzavedena branná povinnost, 35,5 % rozpočtu na vybavení.','left');
+  addPoint(54.69,25.28,'vhigh',10,'Litva','<b>Litva</b><div class="gdp-line">5,38 % HDP (2026)</div>1,2 mld. USD na zázemí pro spojenecké jednotky, aktivována německá 45. tanková brigáda.','right');
+
+  // --- Střední Evropa ---
+  addPoint(52.23,21.01,'high',10,'Polsko','<b>Polsko</b><div class="gdp-line">4,8 % HDP (2026)</div>Program East Shield — 2,5 mld. USD, 700 km hranice s Ruskem/Běloruskem. Plán zdvojnásobit armádu na 300 000 vojáků.','left');
+  addPoint(50.08,14.44,'mid',9,'Česko','<b>Česko</b><div class="gdp-line">2,1 % HDP (2026)</div>Cíl 3 % do 2030. Náčelník GŠ K. Řehka: Rusko zůstává "nejnaléhavějším rizikem v Evropě".','left');
+  addPoint(48.15,17.11,'mid',8,'Slovensko','<b>Slovensko</b><div class="gdp-line">~2,2 % HDP</div>"Schizofrenie" politiky — hostí NATO jednotku, premiér Fico opakovaně navštěvuje Moskvu.','right');
+  addPoint(47.50,19.04,'low',8,'Maďarsko','<b>Maďarsko</b><div class="gdp-line">politický zlom, 4/2026</div>Konec 16letého vládnutí Orbána, nový premiér Magyar obrací kurz k EU/NATO.','left');
+
+  // --- Černomořský jih ---
+  addPoint(44.43,26.10,'mid',8,'Rumunsko','<b>Rumunsko</b><div class="gdp-line">výdaje rostou</div>650 km hranice s Ukrajinou, desítky narušení vzdušného prostoru drony. Tlačí na vyhrazenou černomořskou misi.','right');
+  addPoint(42.70,23.32,'low',8,'Bulharsko','<b>Bulharsko</b><div class="gdp-line">~2 % HDP</div>Spolupráce s Rumunskem a Tureckem proti plovoucím minám v Černém moři.','left');
+
+  // --- Rusko a Ukrajina jako reference ---
+  addPoint(68.97,33.09,'ru',9,'Rusko — Kola/Murmansk','<b>Rusko — Kola poloostrov</b>Nová infrastruktura pro cca 80 000 vojáků u hranic s Norskem a Finskem (satelitní snímky, 2026).','right');
+  addPoint(54.71,20.51,'ru',9,'Rusko — Kaliningrad','<b>Rusko — Kaliningradská oblast</b>~12 000 vojáků, rakety Iskander. Klíčový bod tlaku na Suwalskou mezeru.','right');
+  addPoint(49.0,31.5,'ua',9,'Ukrajina (válečná zóna)','<b>Ukrajina</b>Válečná zóna od 2/2022 — viz sekce 02–04 tohoto reportu pro ztráty a techniku.','right');
+
+  // --- Suwalská mezera — zvýrazněný bod zranitelnosti ---
+  var gapIcon = L.divIcon({
+    className:'',
+    html:'<div style="width:15px;height:15px;background:#c9962c;transform:rotate(45deg);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.35);"></div>',
+    iconSize:[15,15]
+  });
+  L.marker([54.1,22.9],{icon:gapIcon}).addTo(map)
+    .bindPopup('<b>Suwalská mezera</b>Jediné pozemní spojení Pobaltí se zbytkem NATO — 65 km koridor mezi Kaliningradem a Běloruskem, hlídaný jen 2 silnicemi a 1 tratí.')
+    .bindTooltip('Suwalská mezera',{permanent:true,direction:'bottom',offset:[0,10],className:'map-tag'});
+  allPoints.push([54.1,22.9]);
+
+  // --- Linie znázorňující východní křídlo (orientační, ne hranice) ---
+  L.polyline([
+    [69.73,30.05],[66.5,25.7],[59.44,24.75],[56.95,24.11],[54.69,25.28],
+    [52.23,21.01],[48.15,17.11],[47.50,19.04],[44.43,26.10],[42.70,23.32]
+  ],{color:'#9c6b1f', weight:2, opacity:0.35, dashArray:'6,8'}).addTo(map);
+
+  map.fitBounds(allPoints, {padding:[30,30]});
+})();
+</script>
+
 </body>
 </html>
