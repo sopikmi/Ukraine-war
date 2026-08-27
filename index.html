@@ -184,14 +184,6 @@ td.src a{font-size:0.78rem;}
   padding:24px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.06);
 }
 .map-note{font-size:0.74rem;color:var(--text-faint);margin-bottom:16px;font-family:'IBM Plex Mono';}
-#nato-map{width:100%;border-radius:6px;background:#e7e2d2;border:1px solid var(--border-soft);display:block;}
-.svgmap-mk-nato{fill:#e7e2d2;stroke:#4a4030;stroke-width:2;}
-.svgmap-mk-context{fill:#d3c9ae;stroke:#4a4030;stroke-width:2;}
-.svgmap-cname{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:0.04em;fill:#4a4030;pointer-events:none;}
-.svgmap-arrow-threat{fill:none;stroke:#9c3b30;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;opacity:0.8;marker-end:url(#arrowThreat);}
-.svgmap-arrow-reinforce{fill:none;stroke:#2f5c7a;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:2,8;opacity:0.8;marker-end:url(#arrowReinforce);}
-.svgmap-marker-label{font-family:'IBM Plex Mono',monospace;fill:#4a4030;font-weight:600;}
-.svgmap-marker-label{font-family:'IBM Plex Mono',monospace;fill:var(--ink);font-weight:600;}
 .map-tag{
   font-family:'IBM Plex Mono';font-weight:600;font-size:0.72rem;color:var(--ink);
   background:rgba(255,255,255,0.92);border:1px solid rgba(0,0,0,0.15);
@@ -381,17 +373,6 @@ footer b{color:var(--text-dim);}
     <h2>Ruská technika ztracená dle ukrajinského generálního štábu</h2>
     <p class="intro-text">Kumulativně k 24. 8. 2026. Ukrajinský zdroj — brát s rezervou, ale trend (masivní úbytek) potvrzují i nezávislé zdroje (Foreign Affairs/Kofman, Oryx metodika).</p>
 
-    <h3>Mapa bojiště — aktuální kontrola území</h3>
-    <figure class="map-figure">
-      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/2022_Russian_invasion_of_Ukraine.svg" alt="Mapa kontroly území v rusko-ukrajinské válce" loading="lazy">
-      <figcaption>Zdroj: Wikimedia Commons, průběžně aktualizovaná mapa (CC BY-SA 4.0) — sestavena z dat ISW/Critical Threats Project a dalších OSINT zdrojů. Obrázek se načítá vždy v nejaktuálnější verzi souboru. <a href="https://commons.wikimedia.org/wiki/File:2022_Russian_invasion_of_Ukraine.svg" target="_blank">Zdrojová stránka a historie verzí →</a></figcaption>
-    </figure>
-    <div class="map-links">
-      <a href="https://www.criticalthreats.org/analysis/ukraine-conflict-updates-ctp-isw" target="_blank">🗺️ ISW / Critical Threats — interaktivní mapa</a>
-      <a href="https://deepstatemap.live/" target="_blank">🗺️ DeepStateMap.Live — ukrajinský OSINT tracker</a>
-      <a href="https://liveuamap.com/" target="_blank">🗺️ LiveUAmap — mapa v reálném čase</a>
-      <a href="https://www.understandingwar.org/backgrounder/ukraine-conflict-updates" target="_blank">📄 ISW — denní textové updaty</a>
-    </div>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Kategorie</th><th>Počet</th><th>Denní přírůstek (24.8.)</th></tr></thead>
@@ -553,92 +534,15 @@ footer b{color:var(--text-dim);}
     <span class="eyebrow">09 / Východní křídlo NATO</span>
     <h2>Stav, zranitelnosti, plány</h2>
 
-    <div class="map-wrap">
-      <div class="map-note">SCHEMATICKÁ MAPA · značky jako na operační mapě (□ NATO, ◇ mimo NATO) na reálné relativní poloze · šipky = orientační vektory tlaku/posil, ne konkrétní trasy · plné detaily viz karty níže</div>
-      <svg id="nato-map" viewBox="0 0 480 680" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Náčrt východního křídla NATO se značkami zemí a vektory tlaku a posil">
-        <defs>
-          <marker id="arrowThreat" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto">
-            <path d="M0,0 L9,4.5 L0,9 L2.5,4.5 Z" fill="#9c3b30"></path>
-          </marker>
-          <marker id="arrowReinforce" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto">
-            <path d="M0,0 L9,4.5 L0,9 L2.5,4.5 Z" fill="#2f5c7a"></path>
-          </marker>
-        </defs>
-
-        <rect x="0" y="0" width="480" height="680" fill="#e7e2d2"></rect>
-
-        <!-- vektory: hrozba / tlak (červená) — pod značkami -->
-        <path class="svgmap-arrow-threat" d="M410,295 L358,318 L312,338"></path>
-        <path class="svgmap-arrow-threat" d="M247,372 L270,378 L286,381"></path>
-        <path class="svgmap-arrow-threat" d="M422,485 L392,540 L358,583"></path>
-
-        <!-- vektor: posily NATO ze západu (modrá, přerušovaná) -->
-        <path class="svgmap-arrow-reinforce" d="M18,418 L120,421 L233,424"></path>
-
-        <!-- kontext: Rusko, Bělorusko, Ukrajina — kosočtverec = mimo NATO -->
-        <rect class="svgmap-mk-context" x="416" y="266" width="13" height="13" transform="rotate(45 422 272)"></rect>
-        <text class="svgmap-cname" x="436" y="277" text-anchor="start" font-size="14">RUSKO</text>
-
-        <rect class="svgmap-mk-context" x="370" y="380" width="12" height="12" transform="rotate(45 376 386)"></rect>
-        <text class="svgmap-cname" x="390" y="390" text-anchor="start" font-size="9.5">BĚLORUSKO</text>
-
-        <rect class="svgmap-mk-context" x="426" y="462" width="12" height="12" transform="rotate(45 432 468)"></rect>
-        <text class="svgmap-cname" x="446" y="472" text-anchor="start" font-size="11">UKRAJINA</text>
-
-        <!-- Severní křídlo — čtverec = NATO -->
-        <rect class="svgmap-mk-nato" x="48" y="247" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="65" y="256" text-anchor="start" font-size="12">NORSKO</text>
-
-        <rect class="svgmap-mk-nato" x="188" y="260" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="205" y="269" text-anchor="start" font-size="12">ŠVÉDSKO</text>
-
-        <rect class="svgmap-mk-nato" x="320" y="241" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="337" y="250" text-anchor="start" font-size="12">FINSKO</text>
-
-        <!-- Pobaltí -->
-        <rect class="svgmap-mk-nato" x="316" y="255" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="333" y="264" text-anchor="start" font-size="10">ESTONSKO</text>
-
-        <rect class="svgmap-mk-nato" x="304" y="311" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="321" y="320" text-anchor="start" font-size="10">LOTYŠSKO</text>
-
-        <rect class="svgmap-mk-nato" x="326" y="363" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="343" y="372" text-anchor="start" font-size="10">LITVA</text>
-
-        <!-- Střední Evropa -->
-        <rect class="svgmap-mk-nato" x="245" y="420" width="12" height="12"></rect>
-        <text class="svgmap-cname" x="264" y="430" text-anchor="start" font-size="14">POLSKO</text>
-
-        <rect class="svgmap-mk-nato" x="119" y="466" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="136" y="475" text-anchor="start" font-size="10">ČESKO</text>
-
-        <rect class="svgmap-mk-nato" x="170" y="508" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="187" y="517" text-anchor="start" font-size="10">SLOVENSKO</text>
-
-        <rect class="svgmap-mk-nato" x="207" y="522" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="212" y="546" text-anchor="middle" font-size="11">MAĎARSKO</text>
-
-        <!-- Černomořský jih -->
-        <rect class="svgmap-mk-nato" x="343" y="590" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="360" y="599" text-anchor="start" font-size="12">RUMUNSKO</text>
-
-        <rect class="svgmap-mk-nato" x="289" y="628" width="10" height="10"></rect>
-        <text class="svgmap-cname" x="294" y="652" text-anchor="middle" font-size="10.5">BULHARSKO</text>
-
-        <!-- Kaliningrad a Suwalská mezera -->
-        <rect class="svgmap-mk-context" x="236" y="363" width="10" height="10" transform="rotate(45 241 368)"></rect>
-        <text class="svgmap-marker-label" x="241" y="401" text-anchor="middle" font-size="8.5">Kaliningrad</text>
-
-        <path d="M280,376 L292,386 M292,376 L280,386" stroke="#c9962c" stroke-width="2.4" stroke-linecap="round"></path>
-        <text class="svgmap-marker-label" x="286" y="418" text-anchor="middle" font-size="9">Suwalská</text>
-        <text class="svgmap-marker-label" x="286" y="429" text-anchor="middle" font-size="9">mezera</text>
-      </svg>
-      <div class="legend">
-        <span><i style="background:none;border:2px solid #4a4030;border-radius:2px;"></i>□ země NATO</span>
-        <span><i style="background:none;border:2px solid #4a4030;border-radius:2px;transform:rotate(45deg);"></i>◇ mimo NATO</span>
-        <span><i style="background:#9c3b30;height:3px;border-radius:0;"></i>vektor tlaku / hrozby</span>
-        <span><i style="background:#2f5c7a;height:3px;border-radius:0;"></i>vektor posil NATO</span>
-      </div>
+    <h3>Mapa — nasazení NATO na východním křídle</h3>
+    <figure class="map-figure">
+      <img src="nato-eastern-flank.jpg" alt="Infografika NATO: nasazení spojeneckých jednotek na východním křídle po zemích, letecká síla, protivzdušná obrana">
+      <figcaption>Oficiální infografika NATO (16. březen 2022) — počty spojeneckých jednotek po zemích, letecká síla a protivzdušná obrana. Čísla jsou orientační a od zveřejnění se dále vyvíjela (viz text a tabulka výdajů níže pro aktuální stav 2026). Zdroj: NATO / Allied Air Command (ac.nato.int).</figcaption>
+    </figure>
+    <div class="map-links">
+      <a href="https://www.criticalthreats.org/analysis/ukraine-conflict-updates-ctp-isw" target="_blank">🗺️ ISW / Critical Threats — mapa fronty (interaktivní)</a>
+      <a href="https://deepstatemap.live/" target="_blank">🗺️ DeepStateMap.Live — ukrajinský OSINT tracker</a>
+      <a href="https://liveuamap.com/" target="_blank">🗺️ LiveUAmap — mapa v reálném čase</a>
     </div>
 
     <h3>Země podle detailu</h3>
