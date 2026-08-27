@@ -6,8 +6,6 @@
 <title>SITREP // Rusko–Ukrajina 2026 · Nezávislá OSINT syntéza</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 :root{
   --bg:#eef1ec;
@@ -140,16 +138,18 @@ thead th{
   text-align:left;font-family:'IBM Plex Mono';font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;
   color:var(--text-dim);background:var(--panel-alt);padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap;
 }
-tbody td{padding:10px 14px;border-bottom:1px solid var(--border-soft);vertical-align:top;color:var(--text);}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border-soft);vertical-align:middle;color:var(--text);}
 tbody tr:last-child td{border-bottom:none;}
 tbody tr:hover{background:rgba(0,0,0,0.025);}
 td.num{font-family:'IBM Plex Mono';color:var(--ink);font-weight:500;white-space:nowrap;}
 td.src a{font-size:0.78rem;}
-.tag{display:inline-block;font-family:'IBM Plex Mono';font-size:0.68rem;padding:2px 7px;border-radius:20px;letter-spacing:0.03em;}
+.td-center, td:has(.tag){text-align:center;}
+.tag{display:inline-block;vertical-align:middle;line-height:1.6;font-family:'IBM Plex Mono';font-size:0.68rem;padding:2px 7px;border-radius:20px;letter-spacing:0.03em;}
 .tag-low{background:rgba(63,107,74,0.12);color:#2d5038;border:1px solid var(--green);}
 .tag-mid{background:rgba(156,107,31,0.12);color:#7a5417;border:1px solid var(--amber);}
 .tag-high{background:rgba(156,59,48,0.12);color:#7a2e25;border:1px solid var(--red);}
 .tag-disinfo{background:rgba(156,59,48,0.2);color:#7a2e25;border:1px solid var(--red);font-weight:600;}
+.tag-line{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
 
 /* ===== Bar rows (simple css bar chart) ===== */
 .bar-row{margin:14px 0;}
@@ -184,19 +184,19 @@ td.src a{font-size:0.78rem;}
   padding:24px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.06);
 }
 .map-note{font-size:0.74rem;color:var(--text-faint);margin-bottom:16px;font-family:'IBM Plex Mono';}
-#nato-map{width:100%;height:640px;border-radius:6px;background:#dde3d7;border:1px solid var(--border-soft);}
-@media (max-width:640px){#nato-map{height:460px;}}
-.leaflet-popup-content-wrapper{background:#fff;color:var(--text);border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.15);}
-.leaflet-popup-content{font-family:'IBM Plex Sans';font-size:0.85rem;margin:12px 14px;line-height:1.5;}
-.leaflet-popup-content b{font-family:'Oswald';color:var(--ink);}
-.leaflet-popup-tip{background:#fff;}
-.leaflet-popup-content .gdp-line{font-family:'IBM Plex Mono';color:var(--amber);font-size:0.82rem;margin:4px 0 6px 0;font-weight:600;}
+#nato-map{width:100%;border-radius:6px;background:#e7e2d2;border:1px solid var(--border-soft);display:block;}
+.svgmap-mk-nato{fill:#e7e2d2;stroke:#4a4030;stroke-width:2;}
+.svgmap-mk-context{fill:#d3c9ae;stroke:#4a4030;stroke-width:2;}
+.svgmap-cname{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:0.04em;fill:#4a4030;pointer-events:none;}
+.svgmap-arrow-threat{fill:none;stroke:#9c3b30;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;opacity:0.8;marker-end:url(#arrowThreat);}
+.svgmap-arrow-reinforce{fill:none;stroke:#2f5c7a;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:2,8;opacity:0.8;marker-end:url(#arrowReinforce);}
+.svgmap-marker-label{font-family:'IBM Plex Mono',monospace;fill:#4a4030;font-weight:600;}
+.svgmap-marker-label{font-family:'IBM Plex Mono',monospace;fill:var(--ink);font-weight:600;}
 .map-tag{
   font-family:'IBM Plex Mono';font-weight:600;font-size:0.72rem;color:var(--ink);
   background:rgba(255,255,255,0.92);border:1px solid rgba(0,0,0,0.15);
   padding:2px 7px;border-radius:3px;box-shadow:0 1px 3px rgba(0,0,0,0.15);white-space:nowrap;
 }
-.leaflet-tooltip::before{display:none;}
 .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px;font-size:0.72rem;color:var(--text-dim);font-family:'IBM Plex Mono';}
 .legend span{display:inline-flex;align-items:center;gap:6px;}
 .legend i{width:12px;height:12px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,0.15);}
@@ -313,15 +313,15 @@ footer b{color:var(--text-dim);}
     <h3>🇷🇺 Rusko</h3>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Kategorie</th><th>Odhad</th><th>Zdroj</th><th>Spolehlivost</th></tr></thead>
+        <thead><tr><th>Kategorie</th><th>Odhad</th><th>Zdroj</th><th class="td-center">Spolehlivost</th></tr></thead>
         <tbody>
-          <tr><td>Padlí (jmenovitě ověřeno)</td><td class="num">77 000+ jen za rok 2026</td><td class="src"><a href="https://en.zona.media/article/2026/08/14/casualties_eng-trl" target="_blank">Mediazona</a></td><td><span class="tag tag-low">dolní mez</span></td></tr>
-          <tr><td>Padlí (nezávislá syntéza)</td><td class="num">267 500–385 500</td><td class="src"><a href="https://wardeathdata.com/russia-ukraine-war-death-toll-2026/" target="_blank">WarDeathData</a></td><td><span class="tag tag-mid">střední</span></td></tr>
-          <tr><td>Padlí (GCHQ odhad)</td><td class="num">~500 000 (do konce 6/2026)</td><td class="src"><a href="https://factually.co/fact-checks/military/russia-ukraine-war-casualty-figures-2026-d084ab" target="_blank">Factually.co</a></td><td><span class="tag tag-high">horní mez</span></td></tr>
-          <tr><td>Padlí (CSIS, nejvyšší)</td><td class="num">až 450 000</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td><span class="tag tag-high">horní mez</span></td></tr>
-          <tr><td>Celkové ztráty (K+W+MIA)</td><td class="num">~1,4 milionu</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td><span class="tag tag-mid">modelový odhad</span></td></tr>
-          <tr><td>Celkové ztráty (ukr. gen. štáb)</td><td class="num">~1 478 000 (k 24.8.2026)</td><td class="src"><a href="https://index.minfin.com.ua/en/russian-invading/casualties/" target="_blank">Minfin/UA GS</a></td><td><span class="tag tag-high">strana konfliktu</span></td></tr>
-          <tr><td>Tempo ztrát 2026</td><td class="num">~34 000/měsíc (červenec: 42 000, rekord)</td><td class="src"><a href="https://kyivindependent.com/russia-records-highest-monthly-losses-of-2026/" target="_blank">Kyiv Independent</a></td><td><span class="tag tag-mid">strana konfliktu</span></td></tr>
+          <tr><td>Padlí (jmenovitě ověřeno)</td><td class="num">77 000+ jen za rok 2026</td><td class="src"><a href="https://en.zona.media/article/2026/08/14/casualties_eng-trl" target="_blank">Mediazona</a></td><td class="td-center"><span class="tag tag-low">dolní mez</span></td></tr>
+          <tr><td>Padlí (nezávislá syntéza)</td><td class="num">267 500–385 500</td><td class="src"><a href="https://wardeathdata.com/russia-ukraine-war-death-toll-2026/" target="_blank">WarDeathData</a></td><td class="td-center"><span class="tag tag-mid">střední</span></td></tr>
+          <tr><td>Padlí (GCHQ odhad)</td><td class="num">~500 000 (do konce 6/2026)</td><td class="src"><a href="https://factually.co/fact-checks/military/russia-ukraine-war-casualty-figures-2026-d084ab" target="_blank">Factually.co</a></td><td class="td-center"><span class="tag tag-high">horní mez</span></td></tr>
+          <tr><td>Padlí (CSIS, nejvyšší)</td><td class="num">až 450 000</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td class="td-center"><span class="tag tag-high">horní mez</span></td></tr>
+          <tr><td>Celkové ztráty (K+W+MIA)</td><td class="num">~1,4 milionu</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td class="td-center"><span class="tag tag-mid">modelový odhad</span></td></tr>
+          <tr><td>Celkové ztráty (ukr. gen. štáb)</td><td class="num">~1 478 000 (k 24.8.2026)</td><td class="src"><a href="https://index.minfin.com.ua/en/russian-invading/casualties/" target="_blank">Minfin/UA GS</a></td><td class="td-center"><span class="tag tag-high">strana konfliktu</span></td></tr>
+          <tr><td>Tempo ztrát 2026</td><td class="num">~34 000/měsíc (červenec: 42 000, rekord)</td><td class="src"><a href="https://kyivindependent.com/russia-records-highest-monthly-losses-of-2026/" target="_blank">Kyiv Independent</a></td><td class="td-center"><span class="tag tag-mid">strana konfliktu</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -329,14 +329,14 @@ footer b{color:var(--text-dim);}
     <h3>🇺🇦 Ukrajina</h3>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Kategorie</th><th>Odhad</th><th>Zdroj</th><th>Spolehlivost</th></tr></thead>
+        <thead><tr><th>Kategorie</th><th>Odhad</th><th>Zdroj</th><th class="td-center">Spolehlivost</th></tr></thead>
         <tbody>
-          <tr><td>Padlí (oficiálně, Zelenskyj)</td><td class="num">55 000 (únor 2026)</td><td class="src"><a href="https://wardeathdata.com/russia-ukraine-war-death-toll-2026/" target="_blank">viz WarDeathData</a></td><td><span class="tag tag-low">dolní mez, přiznaně neúplné</span></td></tr>
-          <tr><td>Padlí (jmenovitě, UALosses)</td><td class="num">~91 559</td><td class="src"><a href="https://factually.co/fact-checks/military/russia-ukraine-war-casualty-totals-figures-estimates-f773b0" target="_blank">Factually.co</a></td><td><span class="tag tag-low">otevřený zdroj</span></td></tr>
-          <tr><td>Padlí (CSIS)</td><td class="num">100 000–150 000</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td><span class="tag tag-mid">modelový odhad</span></td></tr>
-          <tr><td>Nezvěstní (MIA)</td><td class="num">84 568 (duben 2025)</td><td class="src"><a href="https://www.russiamatters.org/news/russia-ukraine-war-report-card/russia-ukraine-war-report-card-july-22-2026" target="_blank">Russia Matters</a></td><td><span class="tag tag-mid">koordinační centrála UA</span></td></tr>
-          <tr><td>Zajatí (vráceno od 2022)</td><td class="num">9 716 osob / 76+ výměn</td><td class="src"><a href="https://united24media.com/war-in-ukraine/nearly-10000-ukrainians-have-returned-from-russian-captivity-since-2022-21839" target="_blank">United24 Media</a></td><td><span class="tag tag-low">potvrzené počty</span></td></tr>
-          <tr><td>Celkové ztráty (K+W+MIA)</td><td class="num">500 000–625 000</td><td class="src"><a href="https://www.russiamatters.org/news/russia-ukraine-war-report-card/russia-ukraine-war-report-card-july-22-2026" target="_blank">Russia Matters / FT</a></td><td><span class="tag tag-mid">západní odhad</span></td></tr>
+          <tr><td>Padlí (oficiálně, Zelenskyj)</td><td class="num">55 000 (únor 2026)</td><td class="src"><a href="https://wardeathdata.com/russia-ukraine-war-death-toll-2026/" target="_blank">viz WarDeathData</a></td><td class="td-center"><span class="tag tag-low">dolní mez, přiznaně neúplné</span></td></tr>
+          <tr><td>Padlí (jmenovitě, UALosses)</td><td class="num">~91 559</td><td class="src"><a href="https://factually.co/fact-checks/military/russia-ukraine-war-casualty-totals-figures-estimates-f773b0" target="_blank">Factually.co</a></td><td class="td-center"><span class="tag tag-low">otevřený zdroj</span></td></tr>
+          <tr><td>Padlí (CSIS)</td><td class="num">100 000–150 000</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td class="td-center"><span class="tag tag-mid">modelový odhad</span></td></tr>
+          <tr><td>Nezvěstní (MIA)</td><td class="num">84 568 (duben 2025)</td><td class="src"><a href="https://www.russiamatters.org/news/russia-ukraine-war-report-card/russia-ukraine-war-report-card-july-22-2026" target="_blank">Russia Matters</a></td><td class="td-center"><span class="tag tag-mid">koordinační centrála UA</span></td></tr>
+          <tr><td>Zajatí (vráceno od 2022)</td><td class="num">9 716 osob / 76+ výměn</td><td class="src"><a href="https://united24media.com/war-in-ukraine/nearly-10000-ukrainians-have-returned-from-russian-captivity-since-2022-21839" target="_blank">United24 Media</a></td><td class="td-center"><span class="tag tag-low">potvrzené počty</span></td></tr>
+          <tr><td>Celkové ztráty (K+W+MIA)</td><td class="num">500 000–625 000</td><td class="src"><a href="https://www.russiamatters.org/news/russia-ukraine-war-report-card/russia-ukraine-war-report-card-july-22-2026" target="_blank">Russia Matters / FT</a></td><td class="td-center"><span class="tag tag-mid">západní odhad</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -366,9 +366,9 @@ footer b{color:var(--text-dim);}
       <table>
         <thead><tr><th>Zdroj</th><th>Tvrzení</th><th>Nezávislé posouzení</th></tr></thead>
         <tbody>
-          <tr><td>Ruské MO, ministr Andrej Belousov (prosinec 2025)</td><td class="num">~500 000 ztrát UA jen za rok 2025 + 103 000 kusů techniky</td><td><span class="tag tag-disinfo">nepodloženo</span> <a href="https://verstka.media/how-russias-defense-ministry-has-been-reporting-on-the-war-for-four-years" target="_blank">Verstka</a></td></tr>
-          <tr><td>Ruský generální štáb (počátek 2026)</td><td class="num">1,5 milionu ztrát UA celkem od 2022</td><td><span class="tag tag-disinfo">označeno za dezinformaci</span> <a href="https://euvsdisinfo.eu/report/ukraine-has-lost-15-million-soldiers-since-2022-half-a-million-in-2025-alone/" target="_blank">EUvsDisinfo</a></td></tr>
-          <tr><td>Proruský hacktivismus (srpen 2025)</td><td class="num">1,7 milionu ztrát UA (údajně z "uniklých dokumentů")</td><td><span class="tag tag-disinfo">vyvráceno</span> <a href="https://www.euronews.com/2025/08/27/verifying-russian-propagandists-claim-that-ukraine-has-lost-17-million-soldiers" target="_blank">Euronews ověřování</a></td></tr>
+          <tr><td>Ruské MO, ministr Andrej Belousov (prosinec 2025)</td><td class="num">~500 000 ztrát UA jen za rok 2025 + 103 000 kusů techniky</td><td><div class="tag-line"><span class="tag tag-disinfo">nepodloženo</span><a href="https://verstka.media/how-russias-defense-ministry-has-been-reporting-on-the-war-for-four-years" target="_blank">Verstka</a></div></td></tr>
+          <tr><td>Ruský generální štáb (počátek 2026)</td><td class="num">1,5 milionu ztrát UA celkem od 2022</td><td><div class="tag-line"><span class="tag tag-disinfo">označeno za dezinformaci</span><a href="https://euvsdisinfo.eu/report/ukraine-has-lost-15-million-soldiers-since-2022-half-a-million-in-2025-alone/" target="_blank">EUvsDisinfo</a></div></td></tr>
+          <tr><td>Proruský hacktivismus (srpen 2025)</td><td class="num">1,7 milionu ztrát UA (údajně z "uniklých dokumentů")</td><td><div class="tag-line"><span class="tag tag-disinfo">vyvráceno</span><a href="https://www.euronews.com/2025/08/27/verifying-russian-propagandists-claim-that-ukraine-has-lost-17-million-soldiers" target="_blank">Euronews ověřování</a></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -413,7 +413,16 @@ footer b{color:var(--text-dim);}
       <div class="stat-card"><div class="n mono">2 100+</div><div class="l">dělostřeleckých systémů</div><div class="s">tamtéž</div></div>
       <div class="stat-card"><div class="n mono">3 500+</div><div class="l">tanků potvrzeno vizuálně (Oryx metodika, jaro 2026)</div><div class="s">nezávislý, konzervativní dolní odhad</div></div>
     </div>
-    <div class="callout"><b>Efektivita ruských ofenziv klesá:</b> v roce 2025 stálo Rusko dobytí jedné čtvereční míle 200 ztrát; v prvních pěti měsících 2026, při čistém zisku jen 17 čtverečních mil, to bylo přes <b>9 600 ztrát na míli</b>. Tempo postupu kleslo na 50–90 metrů denně. Zdroj: <a href="https://mickryan.substack.com/p/losing-on-every-dimension" target="_blank">Mick Ryan, Futura Doctrina</a>.</div>
+    <h3>Efektivita ruských ofenziv klesá</h3>
+    <div class="bar-row">
+      <div class="label"><span>Ztráty na čtvereční míli dobytého území — 2025</span><b>200</b></div>
+      <div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--blue);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="label"><span>Ztráty na čtvereční míli — první pol. 2026 (čistý zisk jen 17 mil²)</span><b>9 600</b></div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red);"></div></div>
+    </div>
+    <p class="small">Tempo postupu kleslo na 50–90 metrů denně. Zdroj: <a href="https://mickryan.substack.com/p/losing-on-every-dimension" target="_blank">Mick Ryan, Futura Doctrina</a>.</p>
 
     <h3>Ukrajinské ztráty techniky</h3>
     <p class="intro-text">Ukrajina na rozdíl od Ruska tato data průběžně nezveřejňuje (operační bezpečnost). Nezávislé odhady existují jen fragmentárně a nejsou v tomto dokumentu prezentovány jako srovnatelně spolehlivé.</p>
@@ -545,27 +554,92 @@ footer b{color:var(--text-dim);}
     <h2>Stav, zranitelnosti, plány</h2>
 
     <div class="map-wrap">
-      <div class="map-note">SKUTEČNÁ MAPA (OpenStreetMap · Leaflet) · barva bodu = výdaje na obranu jako % HDP 2026 · klikni na zemi pro detail, popisky jsou vždy viditelné</div>
-      <div id="nato-map"></div>
+      <div class="map-note">SCHEMATICKÁ MAPA · značky jako na operační mapě (□ NATO, ◇ mimo NATO) na reálné relativní poloze · šipky = orientační vektory tlaku/posil, ne konkrétní trasy · plné detaily viz karty níže</div>
+      <svg id="nato-map" viewBox="0 0 480 680" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Náčrt východního křídla NATO se značkami zemí a vektory tlaku a posil">
+        <defs>
+          <marker id="arrowThreat" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 L2.5,4.5 Z" fill="#9c3b30"></path>
+          </marker>
+          <marker id="arrowReinforce" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 L2.5,4.5 Z" fill="#2f5c7a"></path>
+          </marker>
+        </defs>
+
+        <rect x="0" y="0" width="480" height="680" fill="#e7e2d2"></rect>
+
+        <!-- vektory: hrozba / tlak (červená) — pod značkami -->
+        <path class="svgmap-arrow-threat" d="M410,295 L358,318 L312,338"></path>
+        <path class="svgmap-arrow-threat" d="M247,372 L270,378 L286,381"></path>
+        <path class="svgmap-arrow-threat" d="M422,485 L392,540 L358,583"></path>
+
+        <!-- vektor: posily NATO ze západu (modrá, přerušovaná) -->
+        <path class="svgmap-arrow-reinforce" d="M18,418 L120,421 L233,424"></path>
+
+        <!-- kontext: Rusko, Bělorusko, Ukrajina — kosočtverec = mimo NATO -->
+        <rect class="svgmap-mk-context" x="416" y="266" width="13" height="13" transform="rotate(45 422 272)"></rect>
+        <text class="svgmap-cname" x="436" y="277" text-anchor="start" font-size="14">RUSKO</text>
+
+        <rect class="svgmap-mk-context" x="370" y="380" width="12" height="12" transform="rotate(45 376 386)"></rect>
+        <text class="svgmap-cname" x="390" y="390" text-anchor="start" font-size="9.5">BĚLORUSKO</text>
+
+        <rect class="svgmap-mk-context" x="426" y="462" width="12" height="12" transform="rotate(45 432 468)"></rect>
+        <text class="svgmap-cname" x="446" y="472" text-anchor="start" font-size="11">UKRAJINA</text>
+
+        <!-- Severní křídlo — čtverec = NATO -->
+        <rect class="svgmap-mk-nato" x="48" y="247" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="65" y="256" text-anchor="start" font-size="12">NORSKO</text>
+
+        <rect class="svgmap-mk-nato" x="188" y="260" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="205" y="269" text-anchor="start" font-size="12">ŠVÉDSKO</text>
+
+        <rect class="svgmap-mk-nato" x="320" y="241" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="337" y="250" text-anchor="start" font-size="12">FINSKO</text>
+
+        <!-- Pobaltí -->
+        <rect class="svgmap-mk-nato" x="316" y="255" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="333" y="264" text-anchor="start" font-size="10">ESTONSKO</text>
+
+        <rect class="svgmap-mk-nato" x="304" y="311" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="321" y="320" text-anchor="start" font-size="10">LOTYŠSKO</text>
+
+        <rect class="svgmap-mk-nato" x="326" y="363" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="343" y="372" text-anchor="start" font-size="10">LITVA</text>
+
+        <!-- Střední Evropa -->
+        <rect class="svgmap-mk-nato" x="245" y="420" width="12" height="12"></rect>
+        <text class="svgmap-cname" x="264" y="430" text-anchor="start" font-size="14">POLSKO</text>
+
+        <rect class="svgmap-mk-nato" x="119" y="466" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="136" y="475" text-anchor="start" font-size="10">ČESKO</text>
+
+        <rect class="svgmap-mk-nato" x="170" y="508" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="187" y="517" text-anchor="start" font-size="10">SLOVENSKO</text>
+
+        <rect class="svgmap-mk-nato" x="207" y="522" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="212" y="546" text-anchor="middle" font-size="11">MAĎARSKO</text>
+
+        <!-- Černomořský jih -->
+        <rect class="svgmap-mk-nato" x="343" y="590" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="360" y="599" text-anchor="start" font-size="12">RUMUNSKO</text>
+
+        <rect class="svgmap-mk-nato" x="289" y="628" width="10" height="10"></rect>
+        <text class="svgmap-cname" x="294" y="652" text-anchor="middle" font-size="10.5">BULHARSKO</text>
+
+        <!-- Kaliningrad a Suwalská mezera -->
+        <rect class="svgmap-mk-context" x="236" y="363" width="10" height="10" transform="rotate(45 241 368)"></rect>
+        <text class="svgmap-marker-label" x="241" y="401" text-anchor="middle" font-size="8.5">Kaliningrad</text>
+
+        <path d="M280,376 L292,386 M292,376 L280,386" stroke="#c9962c" stroke-width="2.4" stroke-linecap="round"></path>
+        <text class="svgmap-marker-label" x="286" y="418" text-anchor="middle" font-size="9">Suwalská</text>
+        <text class="svgmap-marker-label" x="286" y="429" text-anchor="middle" font-size="9">mezera</text>
+      </svg>
       <div class="legend">
-        <span><i style="background:#9c3b30;"></i>&gt;5 % HDP</span>
-        <span><i style="background:#9c6b1f;"></i>4–5 % HDP</span>
-        <span><i style="background:#2f5c7a;"></i>2–3 % HDP</span>
-        <span><i style="background:#6b7568;"></i>&lt;2 % / n/a</span>
-        <span><i style="background:#6e1f16;"></i>Rusko</span>
-        <span><i style="background:#c9962c;border-radius:2px;transform:rotate(45deg);"></i>Suwalská mezera (zranitelnost)</span>
+        <span><i style="background:none;border:2px solid #4a4030;border-radius:2px;"></i>□ země NATO</span>
+        <span><i style="background:none;border:2px solid #4a4030;border-radius:2px;transform:rotate(45deg);"></i>◇ mimo NATO</span>
+        <span><i style="background:#9c3b30;height:3px;border-radius:0;"></i>vektor tlaku / hrozby</span>
+        <span><i style="background:#2f5c7a;height:3px;border-radius:0;"></i>vektor posil NATO</span>
       </div>
     </div>
-
-    <div class="bar-row">
-      <div class="label"><span>🇺🇦 Ztráty na čtvereční míli — 2025</span><b>200</b></div>
-      <div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--blue);"></div></div>
-    </div>
-    <div class="bar-row">
-      <div class="label"><span>🇺🇦 Ztráty na čtvereční míli — první pol. 2026</span><b>9 600</b></div>
-      <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red);"></div></div>
-    </div>
-    <p class="small">Ilustrace prudkého poklesu efektivity ruských ofenziv. Zdroj: Mick Ryan / Russia Matters, viz sekce 03.</p>
 
     <h3>Země podle detailu</h3>
     <div class="country-grid">
@@ -724,77 +798,7 @@ footer b{color:var(--text-dim);}
 </main>
 </div>
 
-<script>
-(function(){
-  var map = L.map('nato-map', {scrollWheelZoom:false, minZoom:3, maxZoom:8});
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '© OpenStreetMap contributors, © CARTO',
-    maxZoom: 19
-  }).addTo(map);
-
-  function colorFor(tier){
-    return {vhigh:'#9c3b30', high:'#9c6b1f', mid:'#2f5c7a', low:'#6b7568', ru:'#6e1f16', ua:'#3a4a55'}[tier];
-  }
-
-  var markers = [];
-  var allPoints = [];
-
-  function addPoint(lat,lon,tier,radius,label,html,dir){
-    var m = L.circleMarker([lat,lon],{
-      radius:radius, color:'#fff', weight:2, fillColor:colorFor(tier), fillOpacity:0.92
-    }).addTo(map).bindPopup(html || label)
-      .bindTooltip(label,{permanent:true,direction:dir||'right',offset:(dir==='left'?[-10,0]:[10,0]),className:'map-tag'});
-    markers.push(m);
-    allPoints.push([lat,lon]);
-    return m;
-  }
-
-  // --- Severní křídlo ---
-  addPoint(69.73,30.05,'low',7,'Norsko','<b>Norsko</b><div class="gdp-line">výdaje: n/a</div>Dlouhá hranice s Kola poloostrovem, sdílí severní frontu s Finskem.','left');
-  addPoint(66.5,25.7,'high',9,'Finsko','<b>Finsko</b><div class="gdp-line">výdaje: vysoké, rostoucí</div>830 km hranice s Ruskem — po vstupu do NATO zdvojnásobilo délku hranice aliance. Nová bojová skupina FLF Finland (6/2026).','right');
-  addPoint(59.33,18.06,'high',9,'Švédsko','<b>Švédsko</b><div class="gdp-line">rámcový stát FLF Finland</div>Velí bojové skupině (600–1200 vojáků), posílená obrana ostrova Gotland.','left');
-
-  // --- Pobaltí ---
-  addPoint(59.44,24.75,'vhigh',10,'Estonsko','<b>Estonsko</b><div class="gdp-line">5,4 % HDP (2026)</div>576 mil. USD na infrastrukturu 2025–2028, nová základna Camp Reedo.','right');
-  addPoint(56.95,24.11,'vhigh',10,'Lotyšsko','<b>Lotyšsko</b><div class="gdp-line">4,91 % HDP (2026)</div>Znovuzavedena branná povinnost, 35,5 % rozpočtu na vybavení.','left');
-  addPoint(54.69,25.28,'vhigh',10,'Litva','<b>Litva</b><div class="gdp-line">5,38 % HDP (2026)</div>1,2 mld. USD na zázemí pro spojenecké jednotky, aktivována německá 45. tanková brigáda.','right');
-
-  // --- Střední Evropa ---
-  addPoint(52.23,21.01,'high',10,'Polsko','<b>Polsko</b><div class="gdp-line">4,8 % HDP (2026)</div>Program East Shield — 2,5 mld. USD, 700 km hranice s Ruskem/Běloruskem. Plán zdvojnásobit armádu na 300 000 vojáků.','left');
-  addPoint(50.08,14.44,'mid',9,'Česko','<b>Česko</b><div class="gdp-line">2,1 % HDP (2026)</div>Cíl 3 % do 2030. Náčelník GŠ K. Řehka: Rusko zůstává "nejnaléhavějším rizikem v Evropě".','left');
-  addPoint(48.15,17.11,'mid',8,'Slovensko','<b>Slovensko</b><div class="gdp-line">~2,2 % HDP</div>"Schizofrenie" politiky — hostí NATO jednotku, premiér Fico opakovaně navštěvuje Moskvu.','right');
-  addPoint(47.50,19.04,'low',8,'Maďarsko','<b>Maďarsko</b><div class="gdp-line">politický zlom, 4/2026</div>Konec 16letého vládnutí Orbána, nový premiér Magyar obrací kurz k EU/NATO.','left');
-
-  // --- Černomořský jih ---
-  addPoint(44.43,26.10,'mid',8,'Rumunsko','<b>Rumunsko</b><div class="gdp-line">výdaje rostou</div>650 km hranice s Ukrajinou, desítky narušení vzdušného prostoru drony. Tlačí na vyhrazenou černomořskou misi.','right');
-  addPoint(42.70,23.32,'low',8,'Bulharsko','<b>Bulharsko</b><div class="gdp-line">~2 % HDP</div>Spolupráce s Rumunskem a Tureckem proti plovoucím minám v Černém moři.','left');
-
-  // --- Rusko a Ukrajina jako reference ---
-  addPoint(68.97,33.09,'ru',9,'Rusko — Kola/Murmansk','<b>Rusko — Kola poloostrov</b>Nová infrastruktura pro cca 80 000 vojáků u hranic s Norskem a Finskem (satelitní snímky, 2026).','right');
-  addPoint(54.71,20.51,'ru',9,'Rusko — Kaliningrad','<b>Rusko — Kaliningradská oblast</b>~12 000 vojáků, rakety Iskander. Klíčový bod tlaku na Suwalskou mezeru.','right');
-  addPoint(49.0,31.5,'ua',9,'Ukrajina (válečná zóna)','<b>Ukrajina</b>Válečná zóna od 2/2022 — viz sekce 02–04 tohoto reportu pro ztráty a techniku.','right');
-
-  // --- Suwalská mezera — zvýrazněný bod zranitelnosti ---
-  var gapIcon = L.divIcon({
-    className:'',
-    html:'<div style="width:15px;height:15px;background:#c9962c;transform:rotate(45deg);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.35);"></div>',
-    iconSize:[15,15]
-  });
-  L.marker([54.1,22.9],{icon:gapIcon}).addTo(map)
-    .bindPopup('<b>Suwalská mezera</b>Jediné pozemní spojení Pobaltí se zbytkem NATO — 65 km koridor mezi Kaliningradem a Běloruskem, hlídaný jen 2 silnicemi a 1 tratí.')
-    .bindTooltip('Suwalská mezera',{permanent:true,direction:'bottom',offset:[0,10],className:'map-tag'});
-  allPoints.push([54.1,22.9]);
-
-  // --- Linie znázorňující východní křídlo (orientační, ne hranice) ---
-  L.polyline([
-    [69.73,30.05],[66.5,25.7],[59.44,24.75],[56.95,24.11],[54.69,25.28],
-    [52.23,21.01],[48.15,17.11],[47.50,19.04],[44.43,26.10],[42.70,23.32]
-  ],{color:'#9c6b1f', weight:2, opacity:0.35, dashArray:'6,8'}).addTo(map);
-
-  map.fitBounds(allPoints, {padding:[30,30]});
-})();
-</script>
 
 </body>
 </html>
