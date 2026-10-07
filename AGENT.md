@@ -62,9 +62,11 @@ se zdrojovým odkazem. V pochybnostech to nech být a jen to zmiň v denním tex
 ```html
 <p class="intro-text"><b>Stav k D. M. RRRR.</b> Jedna až dvě věty: nejdůležitější vývoj dne.</p>
 <figure class="isw-map" style="margin:20px 0;">
-  <a href="URL_DNESNIHO_HODNOCENI_ISW" target="_blank"><img referrerpolicy="no-referrer" src="URL_MAPY" alt="Mapa ISW: Russo-Ukrainian War, D. M. RRRR" loading="lazy" style="width:100%;height:auto;border-radius:8px;border:1px solid rgba(128,128,128,.25);"></a>
-  <figcaption class="small">Mapa: Institute for the Study of War a AEI Critical Threats Project, stav k D. M. RRRR. Kliknutím otevřete plné hodnocení ISW.</figcaption>
-</figure>
+      <div style="position:relative;width:100%;height:0;padding-bottom:75%;min-height:420px;border-radius:8px;overflow:hidden;border:1px solid rgba(128,128,128,.25);">
+        <iframe src="https://storymaps.arcgis.com/stories/36a7f6a6f5a9448496de641cf64bd375" title="Interaktivní mapa ISW – kontrola území na Ukrajině" loading="lazy" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+      </div>
+      <figcaption class="small">Interaktivní mapa: Institute for the Study of War a AEI Critical Threats Project (aktualizuje ISW). <a href="https://storymaps.arcgis.com/stories/36a7f6a6f5a9448496de641cf64bd375" target="_blank">Otevřít na celou obrazovku</a> · <a href="URL_DNESNIHO_HODNOCENI_ISW" target="_blank">dnešní hodnocení ISW se statickou mapou</a>.</figcaption>
+    </figure>
 <h3>Fronta</h3>
 <p>Souvislý odstavec: kde se bojovalo, ověřené posuny (podle ISW), hlavní směry.</p>
 <h3>Údery a protivzdušná obrana</h3>
@@ -80,12 +82,10 @@ uveď, že jde o tvrzení strany konfliktu. Bez propagandy, bez spekulací. Celk
 Odkazy vždy `target="_blank"`.
 
 ### Mapa ISW (povinná součást denního sitrepu)
-- Hlavní mapa je na stránce hodnocení ISW na criticalthreats.org. URL má tvar
-  `https://www.criticalthreats.org/wp-content/uploads/Russo-Ukrainian-War-<Month>-<D>-<YYYY>.png`
-  (např. `Russo-Ukrainian-War-October-6-2026.png`). Přesnou adresu VŽDY vezmi z HTML dnešního hodnocení
-  (WebFetch s dotazem na `src` obrázku „Russo-Ukrainian War“), nehádej ji.
-- Obrázek NEKOPÍRUJ do repozitáře, jen ho vlož odkazem (`<img src>`) s popiskem a odkazem na hodnocení – autorská práva má ISW.
-- Datum mapy a datum hodnocení musí sedět. Když mapu pro nejnovější hodnocení nenajdeš, sekci mapy vynech a uveď to ve zprávě.
+- Statický obrázek mapy z criticalthreats.org NEVKLÁDEJ – web blokuje zobrazení na cizích stránkách.
+- Místo toho vždy vlož blok `<figure class="isw-map">` z formátu výše: interaktivní mapu ISW (iframe ArcGIS StoryMaps, adresa je stálá a ISW ji sám aktualizuje)
+  a v popisku odkaz na dnešní hodnocení ISW (URL_DNESNIHO_HODNOCENI_ISW = adresa hodnocení na criticalthreats.org, ze kterého jsi čerpal).
+- Nic z map nekopíruj do repozitáře – autorská práva má ISW.
 
 ## Archiv
 - Každý den vytvoř soubor `sitrep/RRRR-MM-DD.html` podle šablony `sitrep/_template.html`
