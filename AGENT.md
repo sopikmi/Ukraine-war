@@ -61,6 +61,10 @@ se zdrojovým odkazem. V pochybnostech to nech být a jen to zmiň v denním tex
 ## Formát denního sitrepu (obsah DAILY)
 ```html
 <p class="intro-text"><b>Stav k D. M. RRRR.</b> Jedna až dvě věty: nejdůležitější vývoj dne.</p>
+<figure class="isw-map" style="margin:20px 0;">
+  <a href="URL_DNESNIHO_HODNOCENI_ISW" target="_blank"><img src="URL_MAPY" alt="Mapa ISW: Russo-Ukrainian War, D. M. RRRR" loading="lazy" style="width:100%;height:auto;border-radius:8px;border:1px solid rgba(128,128,128,.25);"></a>
+  <figcaption class="small">Mapa: Institute for the Study of War a AEI Critical Threats Project, stav k D. M. RRRR. Kliknutím otevřete plné hodnocení ISW.</figcaption>
+</figure>
 <h3>Fronta</h3>
 <p>Souvislý odstavec: kde se bojovalo, ověřené posuny (podle ISW), hlavní směry.</p>
 <h3>Údery a protivzdušná obrana</h3>
@@ -74,6 +78,14 @@ se zdrojovým odkazem. V pochybnostech to nech být a jen to zmiň v denním tex
 Pravidla stylu: čeština, věcný OSINT tón, souvislé odstavce (ne odrážky), u tvrzení jedné strany
 uveď, že jde o tvrzení strany konfliktu. Bez propagandy, bez spekulací. Celkem cca 250–450 slov.
 Odkazy vždy `target="_blank"`.
+
+### Mapa ISW (povinná součást denního sitrepu)
+- Hlavní mapa je na stránce hodnocení ISW na criticalthreats.org. URL má tvar
+  `https://www.criticalthreats.org/wp-content/uploads/Russo-Ukrainian-War-<Month>-<D>-<YYYY>.png`
+  (např. `Russo-Ukrainian-War-October-6-2026.png`). Přesnou adresu VŽDY vezmi z HTML dnešního hodnocení
+  (WebFetch s dotazem na `src` obrázku „Russo-Ukrainian War“), nehádej ji.
+- Obrázek NEKOPÍRUJ do repozitáře, jen ho vlož odkazem (`<img src>`) s popiskem a odkazem na hodnocení – autorská práva má ISW.
+- Datum mapy a datum hodnocení musí sedět. Když mapu pro nejnovější hodnocení nenajdeš, sekci mapy vynech a uveď to ve zprávě.
 
 ## Archiv
 - Každý den vytvoř soubor `sitrep/RRRR-MM-DD.html` podle šablony `sitrep/_template.html`
