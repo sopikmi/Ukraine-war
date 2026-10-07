@@ -91,7 +91,7 @@ Když push selže kvůli konfliktu, jednou udělej `git pull --rebase` a zkus zn
 
 ## Závěrečná zpráva
 Česky, 4–8 vět: nejdůležitější vývoj dne, nová čísla gen. štábu (osoby + tanky/dělostřelectvo),
-případné výpadky zdrojů, a odkaz na https://sopikmi.github.io/ukraine-war/ . Zprávu pošli vždy, i když se nic nezměnilo.
+případné výpadky zdrojů, a odkaz na https://sopikmi.github.io/Ukraine-war/ . Zprávu pošli vždy, i když se nic nezměnilo.
 
 ## Týdenní kompletní revize (každou neděli)
 V neděli udělej nejdřív běžný denní sitrep a potom projdi CELOU stránku, sekci po sekci:
