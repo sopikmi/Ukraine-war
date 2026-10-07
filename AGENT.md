@@ -18,6 +18,16 @@ Každý běh začíná bez paměti, proto vše potřebné je zde.
 - **Východní křídlo NATO**: jen pokud se ten den stalo něco podstatného (narušení vzdušného prostoru, drony, sabotáže, nasazení jednotek).
 - Oryx / Russia Matters / think-tanky jen když vyšla nová data.
 
+### Michalovy oblíbené OSINT zdroje (X a YouTube)
+X i YouTube blokují přímé načítání (robots.txt), proto je nečti přes WebFetch na x.com / youtube.com.
+Místo toho pro každý udělej jedno WebSearch omezené na posledních ~24–48 h a použij, co najdeš
+v čitelné podobě (články, které je citují, přepisy, zrcadla):
+- **Majakovsk73** (X, @Majakovsk73) – mapy a posuny fronty.
+- **Clément Molin** (X) – francouzský analytik, mapy a souhrny fronty.
+- **Denys Davydov** (YouTube) – denní videoshrnutí bývalého ukrajinského pilota.
+Když nic čitelného nenajdeš, prostě je přeskoč – nevymýšlej, co v příspěvcích nebo videích „asi“ zaznělo.
+Když je najdeš, uveď je ve zdrojích denního sitrepu a u tvrzení, která potvrzuje jen jeden z nich, to napiš.
+
 Používej WebSearch a WebFetch. Když zdroj nejde načíst, přeskoč ho, pokračuj a v denním textu to uveď
 jednou větou. Nikdy si čísla nevymýšlej a nepřebírej je z paměti – každé nové číslo musí mít zdroj z dnešního běhu.
 
