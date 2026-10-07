@@ -11,8 +11,8 @@ Každý běh začíná bez paměti, proto vše potřebné je zde.
 4. Poslat Michalovi krátké shrnutí v češtině.
 
 ## Zdroje (v tomto pořadí)
-- **ISW** – Russian Offensive Campaign Assessment (understandingwar.org), nejnovější den.
-- **Ukrajinský generální štáb** přes https://index.minfin.com.ua/en/russian-invading/casualties/ – kumulativní ztráty osob a techniky + denní přírůstky.
+- **ISW** – Russian Offensive Campaign Assessment. understandingwar.org je pro WebFetch blokovaný, čti zrcadlo `https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-<month>-<d>-<yyyy>` (např. `october-6-2026`), nejnovější dostupný den.
+- **Ukrajinský generální štáb** přes MO Ukrajiny: `https://mod.gov.ua/en/news/total-russian-combat-losses-in-ukraine-as-of-<month>-<d>-<yyyy>` (např. `october-6-2026`). Zkus dnešek, při 404 včerejšek, pak předevčírem. Minfin.index NEPOUŽÍVEJ – vrací zastaralá data z roku 2025.
 - **Britské MO** – Defence Intelligence update (gov.uk / X).
 - **Zpravodajství**: Kyiv Independent, Reuters, Meduza/Mediazona, Euromaidan Press.
 - **Východní křídlo NATO**: jen pokud se ten den stalo něco podstatného (narušení vzdušného prostoru, drony, sabotáže, nasazení jednotek).
