@@ -238,8 +238,9 @@ footer b{color:var(--text-dim);}
 <div class="shell">
 
 <nav class="toc">
-  <div class="toc-brand"><span class="dot"></span><span>SITREP · 27.08.2026</span></div>
+  <div class="toc-brand"><span class="dot"></span><span><!--DATE_SHORT-->SITREP · 27.08.2026<!--/DATE_SHORT--></span></div>
   <ol>
+    <li><a href="#denni">Denní sitrep</a></li>
     <li><a href="#uvod">Metodologie</a></li>
     <li><a href="#ztraty">Ztráty na životech</a></li>
     <li><a href="#ruske-tvrzeni">Ruský odhad ztrát UA</a></li>
@@ -253,7 +254,7 @@ footer b{color:var(--text-dim);}
     <li><a href="#zdroje">Zdroje a OSINT</a></li>
   </ol>
   <div class="toc-foot">
-    Sestaveno z veřejně dostupných zdrojů (OSINT). Čísla obou stran nelze nezávisle verifikovat — viz metodologická poznámka. Aktualizace k 27. srpnu 2026.
+    Sestaveno z veřejně dostupných zdrojů (OSINT). Čísla obou stran nelze nezávisle verifikovat — viz metodologická poznámka. <!--DATE_FOOT-->Aktualizace k 27. srpnu 2026.<!--/DATE_FOOT-->
   </div>
 </nav>
 
@@ -264,12 +265,25 @@ footer b{color:var(--text-dim);}
     <h1>Rusko–Ukrajina: ztráty, technika, scénáře a východní křídlo NATO</h1>
     <p class="lede">Nezávislá analytická syntéza dostupných dat k srpnu 2026 — bez propagandy jedné či druhé strany, s explicitním rozptylem odhadů a jejich zdroji. Připraveno jako pracovní dokument, ne jako předpověď.</p>
     <div class="cover-meta">
-      <div><span>Stav k</span><b>27. srpen 2026</b></div>
+      <div><span>Stav k</span><b><!--DATE_COVER-->27. srpen 2026<!--/DATE_COVER--></b></div>
       <div><span>Rozsah</span><b>ztráty · technika · NATO východ · scénáře</b></div>
       <div><span>Metodika</span><b>vícezdrojová triangulace</b></div>
       <div><span>Jazyk</span><b>čeština</b></div>
     </div>
   </div>
+
+  <!-- ================= DAILY SITREP (aktualizuje denní agent, viz AGENT.md) ================= -->
+  <section id="denni">
+    <span class="eyebrow">Denní sitrep</span>
+    <h2>Co se změnilo za posledních 24 hodin</h2>
+    <!--DAILY_START-->
+    <p class="intro-text">Denní aktualizace se spouští automaticky každé ráno. První denní souhrn se objeví po nejbližším běhu.</p>
+    <!--DAILY_END-->
+    <h3>Archiv denních sitrepů</h3>
+    <!--ARCHIVE_START-->
+    <p class="small">Zatím žádné záznamy.</p>
+    <!--ARCHIVE_END-->
+  </section>
 
   <!-- ================= METHODOLOGY ================= -->
   <section id="uvod">
@@ -312,7 +326,7 @@ footer b{color:var(--text-dim);}
           <tr><td>Padlí (GCHQ odhad)</td><td class="num">~500 000 (do konce 6/2026)</td><td class="src"><a href="https://factually.co/fact-checks/military/russia-ukraine-war-casualty-figures-2026-d084ab" target="_blank">Factually.co</a></td><td class="td-center"><span class="tag tag-high">horní mez</span></td></tr>
           <tr><td>Padlí (CSIS, nejvyšší)</td><td class="num">až 450 000</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td class="td-center"><span class="tag tag-high">horní mez</span></td></tr>
           <tr><td>Celkové ztráty (K+W+MIA)</td><td class="num">~1,4 milionu</td><td class="src"><a href="https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war" target="_blank">CSIS</a></td><td class="td-center"><span class="tag tag-mid">modelový odhad</span></td></tr>
-          <tr><td>Celkové ztráty (ukr. gen. štáb)</td><td class="num">~1 478 000 (k 24.8.2026)</td><td class="src"><a href="https://index.minfin.com.ua/en/russian-invading/casualties/" target="_blank">Minfin/UA GS</a></td><td class="td-center"><span class="tag tag-high">strana konfliktu</span></td></tr>
+          <tr><td>Celkové ztráty (ukr. gen. štáb)</td><td class="num"><!--GS_PERSONNEL-->~1 478 000 (k 24.8.2026)<!--/GS_PERSONNEL--></td><td class="src"><a href="https://index.minfin.com.ua/en/russian-invading/casualties/" target="_blank">Minfin/UA GS</a></td><td class="td-center"><span class="tag tag-high">strana konfliktu</span></td></tr>
           <tr><td>Tempo ztrát 2026</td><td class="num">~34 000/měsíc (červenec: 42 000, rekord)</td><td class="src"><a href="https://kyivindependent.com/russia-records-highest-monthly-losses-of-2026/" target="_blank">Kyiv Independent</a></td><td class="td-center"><span class="tag tag-mid">strana konfliktu</span></td></tr>
         </tbody>
       </table>
@@ -371,18 +385,20 @@ footer b{color:var(--text-dim);}
   <section id="technika">
     <span class="eyebrow">03 / Ztráty techniky</span>
     <h2>Ruská technika ztracená dle ukrajinského generálního štábu</h2>
-    <p class="intro-text">Kumulativně k 24. 8. 2026. Ukrajinský zdroj — brát s rezervou, ale trend (masivní úbytek) potvrzují i nezávislé zdroje (Foreign Affairs/Kofman, Oryx metodika).</p>
+    <p class="intro-text">Kumulativně k <!--GS_DATE-->24. 8. 2026<!--/GS_DATE-->. Ukrajinský zdroj — brát s rezervou, ale trend (masivní úbytek) potvrzují i nezávislé zdroje (Foreign Affairs/Kofman, Oryx metodika).</p>
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Kategorie</th><th>Počet</th><th>Denní přírůstek (24.8.)</th></tr></thead>
+        <thead><tr><th>Kategorie</th><th>Počet</th><th>Denní přírůstek (<!--GS_DATE_SHORT-->24.8.<!--/GS_DATE_SHORT-->)</th></tr></thead>
         <tbody>
+          <!--GS_EQUIP_START-->
           <tr><td>Tanky</td><td class="num">12 293</td><td class="num">+1</td></tr>
           <tr><td>Obrněná bojová vozidla</td><td class="num">25 211</td><td class="num">+9</td></tr>
           <tr><td>Dělostřelecké systémy</td><td class="num">48 519</td><td class="num">+68</td></tr>
           <tr><td>MLRS (raketomety)</td><td class="num">2 056</td><td class="num">+2</td></tr>
           <tr><td>Systémy PVO</td><td class="num">1 586</td><td class="num">+1</td></tr>
           <tr><td>Letadla</td><td class="num">440</td><td class="num">—</td></tr>
+          <!--GS_EQUIP_END-->
         </tbody>
       </table>
     </div>
