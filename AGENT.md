@@ -31,6 +31,13 @@ Když je najdeš, uveď je ve zdrojích denního sitrepu a u tvrzení, která po
 Používej WebSearch a WebFetch. Když zdroj nejde načíst, přeskoč ho, pokračuj a v denním textu to uveď
 jednou větou. Nikdy si čísla nevymýšlej a nepřebírej je z paměti – každé nové číslo musí mít zdroj z dnešního běhu.
 
+## Pravidla ověřování čísel (závazná)
+- Čísla ber z **primárního zdroje** (Mediazona, CSIS, OSN/HRMMU, MO Ukrajiny, Oryx, vládní a NATO data, renomovaná média citující primární zdroj). Anonymní agregátory (např. wardeathdata.com, factually.co) jako zdroj čísel NEPOUŽÍVEJ.
+- Při WebFetch si vždy vyžádej **doslovnou citaci** věty s číslem a datem; shrnutí od fetch nástroje se může mýlit.
+- U každého čísla uveď, **k jakému datu nebo období** platí, a ověř, že popis odpovídá zdroji (padlí × celkové ztráty, celkem × jen za rok).
+- **Kontrola konzistence:** statistický odhad padlých musí být vyšší než jmenovitý (ověřený) počet; poměr ztrát musí odpovídat číslům v tabulkách; data se nesmí vzájemně vylučovat. Když něco nesedí, číslo nepřepisuj a uveď nesoulad v závěrečné zprávě.
+- Údaj, který nejde ověřit, označ („nepodařilo se ověřit“) nebo ho ponech beze změny – nikdy ho nedomýšlej.
+
 ## Co upravit v index.html
 Upravuj VÝHRADNĚ obsah mezi značkami níže. Značky samotné nikdy nemaž ani nepřejmenovávej,
 layout, CSS a ostatní sekce neměň.
