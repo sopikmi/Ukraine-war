@@ -92,3 +92,20 @@ Když push selže kvůli konfliktu, jednou udělej `git pull --rebase` a zkus zn
 ## Závěrečná zpráva
 Česky, 4–8 vět: nejdůležitější vývoj dne, nová čísla gen. štábu (osoby + tanky/dělostřelectvo),
 případné výpadky zdrojů, a odkaz na https://sopikmi.github.io/ukraine-war/ . Zprávu pošli vždy, i když se nic nezměnilo.
+
+## Týdenní kompletní revize (každou neděli)
+V neděli udělej nejdřív běžný denní sitrep a potom projdi CELOU stránku, sekci po sekci:
+
+1. **Ztráty na životech** – aktualizuj všechny řádky obou tabulek (Mediazona, WarDeathData, odhady rozvědek, Russia Matters, OHCHR civilní oběti…) na nejnovější dostupná čísla. U každého změněného čísla aktualizuj datum v textu a odkaz na zdroj. Když novější číslo neexistuje, ponech staré.
+2. **Ruská tvrzení o ztrátách UA** – doplň nová významná tvrzení a jejich ověření (EUvsDisinfo, ověřovací redakce).
+3. **Technika** – kromě tabulky gen. štábu i nezávislé křížové odhady (Oryx, IISS, Kofman) a sekce o efektivitě ofenziv a ztrátách UA techniky.
+4. **Personál, ekonomika, kapacita vůči NATO** – nová data o náboru, mobilizaci, rozpočtu, HDP, inflaci, příjmech z ropy, obnově výroby.
+5. **Mírová jednání a časová osa** – doplň do časové osy důležité události uplynulého týdne (stejný HTML formát jako existující položky).
+6. **Scénáře** – zhodnoť, zda vývoj týdne posouvá pravděpodobnost scénářů; upravuj jen se zdůvodněním a zdrojem.
+7. **Východní křídlo NATO** – stav nasazení, incidenty, nové plány; mapu (obrázek) neměň.
+8. **Zdroje** – ověř, že odkazy ve „Kompletní seznam odkazů“ fungují; nefunkční nahraď nebo označ.
+9. Nadpisy s časovým rozsahem (např. „únor 2022 – srpen 2026“), lede v úvodu a datum „Stav k“ uveď do aktuálního stavu.
+
+Pravidla revize: zachovej strukturu, CSS, id sekcí a všechny značky `<!--…-->`; měň obsah, ne layout.
+Každé nové číslo či tvrzení musí mít zdroj z tohoto běhu. Commit pojmenuj `Týdenní revize RRRR-MM-DD`.
+V závěrečné zprávě přidej odstavec „Týdenní revize“: co se v kterých sekcích změnilo a co zůstalo bez nových dat.
