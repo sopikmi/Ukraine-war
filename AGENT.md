@@ -62,7 +62,7 @@ se zdrojovým odkazem. V pochybnostech to nech být a jen to zmiň v denním tex
 ```html
 <p class="intro-text"><b>Stav k D. M. RRRR.</b> Jedna až dvě věty: nejdůležitější vývoj dne.</p>
 <figure class="isw-map" style="margin:20px 0;">
-  <a href="URL_DNESNIHO_HODNOCENI_ISW" target="_blank"><img src="URL_MAPY" alt="Mapa ISW: Russo-Ukrainian War, D. M. RRRR" loading="lazy" style="width:100%;height:auto;border-radius:8px;border:1px solid rgba(128,128,128,.25);"></a>
+  <a href="URL_DNESNIHO_HODNOCENI_ISW" target="_blank"><img referrerpolicy="no-referrer" src="URL_MAPY" alt="Mapa ISW: Russo-Ukrainian War, D. M. RRRR" loading="lazy" style="width:100%;height:auto;border-radius:8px;border:1px solid rgba(128,128,128,.25);"></a>
   <figcaption class="small">Mapa: Institute for the Study of War a AEI Critical Threats Project, stav k D. M. RRRR. Kliknutím otevřete plné hodnocení ISW.</figcaption>
 </figure>
 <h3>Fronta</h3>
