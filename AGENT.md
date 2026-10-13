@@ -11,8 +11,8 @@ Každý běh začíná bez paměti, proto vše potřebné je zde.
 4. Poslat Michalovi krátké shrnutí v češtině.
 
 ## Zdroje (v tomto pořadí)
-- **ISW** – Russian Offensive Campaign Assessment. understandingwar.org je pro WebFetch blokovaný, čti zrcadlo `https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-<month>-<d>-<yyyy>` (např. `october-6-2026`), nejnovější dostupný den.
-- **Ukrajinský generální štáb** přes MO Ukrajiny: `https://mod.gov.ua/en/news/total-russian-combat-losses-in-ukraine-as-of-<month>-<d>-<yyyy>` (např. `october-6-2026`). Zkus dnešek, při 404 včerejšek, pak předevčírem. Minfin.index NEPOUŽÍVEJ – vrací zastaralá data z roku 2025.
+- **ISW** – Russian Offensive Campaign Assessment. Adresu nejnovějšího hodnocení VŽDY zjisti z výpisu `https://www.criticalthreats.org/analysis` – některé adresy mají za datem náhodnou příponu (např. `october-10-2026-6acac61e77f69`), takže ji nehádej. Pokud nejnovější hodnocení už bylo použito v předchozím sitrepu, nový sitrep NEPIŠ, jen aktualizuj čísla gen. štábu a oznam to Michalovi. understandingwar.org je pro WebFetch blokovaný, čti zrcadlo `https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-<month>-<d>-<yyyy>` (např. `october-6-2026`), nejnovější dostupný den.
+- **Ukrajinský generální štáb** přes MO Ukrajiny: `https://mod.gov.ua/en/news/total-russian-combat-losses-in-ukraine-as-of-<month>-<d>-<yyyy>` (např. `october-6-2026`). Zkus dnešek, při 404 včerejšek, pak předevčírem. Stránka se může jmenovat i jinak, ověř přes vyhledávání. Minfin.index NEPOUŽÍVEJ – vrací zastaralá data z roku 2025.
 - **Britské MO** – Defence Intelligence update (gov.uk / X).
 - **Zpravodajství**: Kyiv Independent, Reuters, Meduza/Mediazona, Euromaidan Press.
 - **Východní křídlo NATO**: jen pokud se ten den stalo něco podstatného (narušení vzdušného prostoru, drony, sabotáže, nasazení jednotek).
