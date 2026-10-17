@@ -15,13 +15,14 @@ jobs:
       - name: Aktualizace dat
         id: upd
         continue-on-error: true
-        run: python scripts/auto_update.py
+        run: python scripts/auto_update.py 2> scripts/last_run.log
       - name: Commit a push
         run: |
-          if ! git diff --quiet; then
+          git add scripts/last_run.log || true
+          if ! git diff --cached --quiet || ! git diff --quiet; then
             git config user.name "sitrep-bot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -am "Automatická aktualizace $(TZ=Europe/Prague date +%F)"
+            git add -A && git commit -m "Automatická aktualizace $(TZ=Europe/Prague date +%F)"
             git push
           fi
       - name: Selhání zdroje
