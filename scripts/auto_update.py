@@ -116,7 +116,7 @@ def main():
         parts.append(f'Nejnovější hodnocení ISW: <a href="{url}" target="_blank">Russian Offensive Campaign Assessment, {d.day}. {d.month}. {d.year}</a> (se statickými mapami).')
     now = dt.datetime.now(ZoneInfo("Europe/Prague"))
     auto = ('\n    <div class="callout"><b>Automatická denní aktualizace ' + f"{today.day}. {today.month}. {today.year}" + ':</b> '
-            + " ".join(parts) + ' Komentovaný souhrn níže může být o den či dva starší.</div>\n    ')
+            + " ".join(parts) + ' Komentovaný souhrn níže se aktualizuje samostatně – jeho datum je uvedeno na začátku.</div>\n    ')
     s = setm(s, "<!--AUTO_START-->", "<!--AUTO_END-->", auto)
     s = setm(s, "<!--DATE_SHORT-->", "<!--/DATE_SHORT-->", f"SITREP · {today.day:02d}.{today.month:02d}.{today.year}")
     s = setm(s, "<!--DATE_FOOT-->", "<!--/DATE_FOOT-->", f"Aktualizace k {today.day}. {MES_3[today.month-1]} {today.year}.")

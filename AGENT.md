@@ -128,3 +128,9 @@ V neděli udělej nejdřív běžný denní sitrep a potom projdi CELOU stránku
 Pravidla revize: zachovej strukturu, CSS, id sekcí a všechny značky `<!--…-->`; měň obsah, ne layout.
 Každé nové číslo či tvrzení musí mít zdroj z tohoto běhu. Commit pojmenuj `Týdenní revize RRRR-MM-DD`.
 V závěrečné zprávě přidej odstavec „Týdenní revize“: co se v kterých sekcích změnilo a co zůstalo bez nových dat.
+
+## Automatická část (GitHub Actions)
+Workflow `.github/workflows/daily-update.yml` každé ráno (~6:17 SELČ) spouští `scripts/auto_update.py`:
+čísla GŠ (mod.gov.ua, záloha russianwarship.rip API), odkaz na nejnovější hodnocení ISW (blok `<!--AUTO_START-->…<!--AUTO_END-->`)
+a data na stránce. Tuto část NEPŘEPISUJ ručně. Log posledního běhu je v `scripts/last_run.log`.
+Komentovaný denní text (DAILY) a nedělní revize se dělají jen na Michalovu výslovnou žádost.
