@@ -52,6 +52,20 @@ def fetch_gs(today):
             print("GS fetch failed", url, e, file=sys.stderr); continue
         if data: return d, url, data
         print("GS parse failed", url, file=sys.stderr)
+    # Záloha: veřejné API zrcadlící denní údaje GŠ (mod.gov.ua blokuje servery GitHubu)
+    try:
+        import json
+        j = json.loads(get("https://russianwarship.rip/api/v2/statistics/latest"))
+        st, inc = j["stats"], j["increase"]
+        d = dt.date.fromisoformat(j["date"])
+        if (today - d).days > 3 or st["personnel_units"] < 1_000_000: raise ValueError("stale/implausible")
+        m = {"personnel":"personnel_units","tanks":"tanks","afv":"armoured_fighting_vehicles","art":"artillery_systems",
+             "mlrs":"mlrs","ad":"aa_warfare_systems","air":"planes"}
+        data = {k: (int(st[v]), int(inc.get(v) or 0) or None) for k, v in m.items()}
+        url = f"https://mod.gov.ua/en/news/total-russian-combat-losses-in-ukraine-as-of-{MONTHS_EN[d.month-1]}-{d.day}-{d.year}"
+        return d, url, data
+    except Exception as e:
+        print("GS fallback failed", e, file=sys.stderr)
     return None
 
 def fetch_isw():
