@@ -47,7 +47,11 @@ def fetch_gs(today):
         d = today - dt.timedelta(days=back)
         url = f"https://mod.gov.ua/en/news/total-russian-combat-losses-in-ukraine-as-of-{MONTHS_EN[d.month-1]}-{d.day}-{d.year}"
         try:
-            data = parse_gs(text_of(get(url)))
+            t = text_of(get(url))
+            data = parse_gs(t)
+            if not data:
+                k = t.lower().find("personnel")
+                print("GS snippet:", (t[k-200:k+600] if k >= 0 else t[:600]).replace("\n", " "), file=sys.stderr)
         except Exception as e:
             print("GS fetch failed", url, e, file=sys.stderr); continue
         if data: return d, url, data
@@ -56,6 +60,7 @@ def fetch_gs(today):
     try:
         import json
         j = json.loads(get("https://russianwarship.rip/api/v2/statistics/latest"))
+        j = j.get("data", j)
         st, inc = j["stats"], j["increase"]
         d = dt.date.fromisoformat(j["date"])
         if (today - d).days > 3 or st["personnel_units"] < 1_000_000: raise ValueError("stale/implausible")
