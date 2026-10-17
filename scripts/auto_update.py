@@ -30,7 +30,7 @@ def fmt(n): return f"{n:,}".replace(",", " ")
 
 def parse_gs(t):
     out = {}
-    m = re.search(r"personnel\s*[‒–—-]?\s*(?:approximately|about)?\s*" + NUM + r"\s*(?:\(\s*\+\s*" + NUM + r"\s*\))?", t, re.I)
+    m = re.search(r"personnel\s*[‒–—:-]?\s*(?:approximately|about)?\s*" + NUM + r"\s*(?:\(\s*\+\s*" + NUM + r"\s*\))?", t, re.I)
     if not m: return None
     out["personnel"] = (toint(m.group(1)), toint(m.group(2)) if m.group(2) else None)
     for key, label in [("tanks","tanks"),("afv","armou?red (?:fighting|combat) vehicles"),("art","artillery systems"),
