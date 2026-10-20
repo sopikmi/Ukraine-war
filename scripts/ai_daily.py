@@ -33,9 +33,11 @@ def claude(system, user):
 
 def isw_text(url):
     raw = au.get(url)
-    m = re.search(r"<article.*?</article>", raw, re.S | re.I)
-    t = au.text_of(m.group(0) if m else raw)
+    t = au.text_of(raw)
     t = re.sub(r"\s*\n\s*", "\n", t)
+    k = t.lower().find("key takeaways")
+    if k > 0:
+        t = t[max(0, k - 3000):]
     print(f"ISW raw {len(raw)} B, text {len(t)} znaků; ukázka: {t[:300]!r}", file=sys.stderr)
     if len(t) < 8000 or "Key Takeaways" not in t and "key takeaways" not in t.lower():
         raise SystemExit("Text hodnocení ISW se nepodařilo načíst (stránka bez obsahu) – nic neměním.")
