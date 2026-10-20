@@ -16,9 +16,15 @@ jobs:
         id: upd
         continue-on-error: true
         run: python scripts/auto_update.py 2> scripts/last_run.log
+      - name: Komentovaný text (Claude API)
+        id: ai
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/ai_daily.py 2> scripts/last_ai.log
       - name: Commit a push
         run: |
-          git add scripts/last_run.log || true
+          git add scripts/last_run.log scripts/last_ai.log || true
           if ! git diff --cached --quiet || ! git diff --quiet; then
             git config user.name "sitrep-bot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -26,5 +32,5 @@ jobs:
             git push
           fi
       - name: Selhání zdroje
-        if: steps.upd.outcome == 'failure'
+        if: steps.upd.outcome == 'failure' || steps.ai.outcome == 'failure'
         run: exit 1

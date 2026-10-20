@@ -133,4 +133,4 @@ V závěrečné zprávě přidej odstavec „Týdenní revize“: co se v který
 Workflow `.github/workflows/daily-update.yml` každé ráno (~6:17 SELČ) spouští `scripts/auto_update.py`:
 čísla GŠ (mod.gov.ua, záloha russianwarship.rip API), odkaz na nejnovější hodnocení ISW (blok `<!--AUTO_START-->…<!--AUTO_END-->`)
 a data na stránce. Tuto část NEPŘEPISUJ ručně. Log posledního běhu je v `scripts/last_run.log`.
-Komentovaný denní text (DAILY) a nedělní revize se dělají jen na Michalovu výslovnou žádost.
+Komentovaný denní text (DAILY) píše automaticky `scripts/ai_daily.py` přes Anthropic API (secret `ANTHROPIC_API_KEY`), log v `scripts/last_ai.log`. Nedělní kompletní revize se dělá jen na Michalovu výslovnou žádost.
