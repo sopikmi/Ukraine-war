@@ -1,7 +1,9 @@
 name: Denní aktualizace SITREP
 on:
   schedule:
-    - cron: "17 4 * * *"   # ~6:17 SELČ / 5:17 SEČ
+    - cron: "17 3 * * *"   # 5:17 SELČ / 4:17 SEČ
+    - cron: "17 5 * * *"   # 7:17 SELČ / 6:17 SEČ (záloha, GitHub plánované běhy často zpožďuje)
+    - cron: "47 9 * * *"   # 11:47 SELČ / 10:47 SEČ (dobírá nové hodnocení ISW)
   workflow_dispatch:
 permissions:
   contents: write
