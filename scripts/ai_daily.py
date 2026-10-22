@@ -115,7 +115,10 @@ def main():
            f'Study of War a AEI Critical Threats Project (aktualizuje ISW). <a href="{SM}" target="_blank">Otevřít na celou obrazovku</a> · '
            f'<a href="{isw_url}" target="_blank">hodnocení ISW se statickou mapou</a>.</figcaption>\n    </figure>')
     intro, rest = frag.split("</p>", 1)
-    content = f"\n    <!--DAILY_ISW:{isw_url}-->\n    {intro}</p>\n    {fig}\n    {rest.strip()}\n    {src}\n    "
+    rest = rest.strip()
+    k = rest.find("<h3>Ztráty podle ukrajinského")
+    rest = (rest[:k] + fig + "\n    " + rest[k:]) if k >= 0 else (rest + "\n    " + fig)
+    content = f"\n    <!--DAILY_ISW:{isw_url}-->\n    {intro}</p>\n    {rest}\n    {src}\n    "
     s = au.setm(s, "<!--DAILY_START-->", "<!--DAILY_END-->", content)
     # archiv
     iso = today.isoformat()
