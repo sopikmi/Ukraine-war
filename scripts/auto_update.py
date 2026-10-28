@@ -8,16 +8,35 @@ Upravuje jen obsah mezi značkami v index.html. Když zdroj selže, nic nepřep�
 import datetime as dt, html, re, sys, urllib.request
 from zoneinfo import ZoneInfo
 
-UA = {"User-Agent": "Mozilla/5.0 (compatible; sitrep-bot; +https://github.com/sopikmi/Ukraine-war)"}
+UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36",
+      "Accept": "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8",
+      "Accept-Language": "en-US,en;q=0.9"}
 MONTHS_EN = ["january","february","march","april","may","june","july","august","september","october","november","december"]
 MES_1 = ["leden","únor","březen","duben","květen","červen","červenec","srpen","září","říjen","listopad","prosinec"]
 MES_3 = ["lednu","únoru","březnu","dubnu","květnu","červnu","červenci","srpnu","září","říjnu","listopadu","prosinci"]
 NUM = r"(\d{1,3}(?:[   ]\d{3})*|\d+)"
 
-def get(url):
-    req = urllib.request.Request(url, headers=UA)
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return r.read().decode("utf-8", "replace")
+def get(url, tries=3):
+    """Stáhne stránku; při dočasném odmítnutí (403/429/5xx, výpadek sítě) to zkusí znovu."""
+    import time, urllib.error
+    for i in range(tries):
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return r.read().decode("utf-8", "replace")
+        except urllib.error.HTTPError as e:
+            if e.code not in (403, 429, 500, 502, 503, 504) or i == tries - 1: raise
+            print(f"HTTP {e.code} {url} – pokus {i+1}/{tries}, zkusím znovu", file=sys.stderr)
+        except (urllib.error.URLError, TimeoutError) as e:
+            if i == tries - 1: raise
+            print(f"síťová chyba {url}: {e} – pokus {i+1}/{tries}", file=sys.stderr)
+        time.sleep(30 * (i + 1))
+
+def isw_from_page(s):
+    """Poslední už zpracované hodnocení ISW uložené na stránce (záloha, když criticalthreats.org odmítne spojení)."""
+    m = re.search(r"<!--DAILY_ISW:(https://www\.criticalthreats\.org/analysis/russian-offensive-campaign-assessment-([a-z]+)-(\d{1,2})-(\d{4})[^>]*?)-->", s)
+    if not m or m.group(2) not in MONTHS_EN: return None
+    return dt.date(int(m.group(4)), MONTHS_EN.index(m.group(2)) + 1, int(m.group(3))), m.group(1)
 
 def text_of(raw):
     t = re.sub(r"<script.*?</script>|<style.*?</style>", " ", raw, flags=re.S | re.I)
@@ -92,8 +111,13 @@ def main():
     today = dt.datetime.now(ZoneInfo("Europe/Prague")).date()
     p = "index.html"; s = open(p, encoding="utf-8").read(); orig = s
     gs = fetch_gs(today)
+    isw_ok = True
     try: isw = fetch_isw()
-    except Exception as e: print("ISW fetch failed", e, file=sys.stderr); isw = None
+    except Exception as e:
+        print("ISW fetch failed", e, file=sys.stderr); isw = isw_from_page(s)
+        # Dočasné odmítnutí nevadí, pokud stránka už má čerstvé hodnocení (ISW vychází s ~1denním zpožděním).
+        isw_ok = bool(isw) and (today - isw[0]).days <= 2
+        if isw_ok: print("Použito poslední zpracované hodnocení ISW ze stránky:", isw[1], file=sys.stderr)
     if not gs and not isw: raise SystemExit("Ani jeden zdroj nejde načíst – stránka beze změny.")
     parts = []
     if gs:
@@ -124,6 +148,6 @@ def main():
     import html.parser; html.parser.HTMLParser().feed(s)
     if s != orig: open(p, "w", encoding="utf-8").write(s); print("updated")
     else: print("no change")
-    if not gs or not isw: raise SystemExit("Jeden ze zdrojů nešel načíst (viz log) – druhý byl aktualizován.")
+    if not gs or not isw_ok: raise SystemExit("Jeden ze zdrojů nešel načíst (viz log) – druhý byl aktualizován.")
 
 if __name__ == "__main__": main()

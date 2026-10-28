@@ -84,7 +84,13 @@ def validate(frag, gs):
 def main():
     today = dt.datetime.now(ZoneInfo("Europe/Prague")).date()
     p = "index.html"; s = open(p, encoding="utf-8").read()
-    isw = au.fetch_isw()
+    try:
+        isw = au.fetch_isw()
+    except Exception as e:
+        if os.path.exists(f"sitrep/{today.isoformat()}.html"):
+            # Dnešní komentář už existuje – další běh jen dobírá novější ISW; dočasný výpadek zdroje není chyba.
+            print("ISW nejde načíst (", e, ") – dnešní SITREP už je hotový, beze změny.", file=sys.stderr); return
+        raise
     if not isw:
         raise SystemExit("Hodnocení ISW nenalezeno.")
     isw_date, isw_url = isw
