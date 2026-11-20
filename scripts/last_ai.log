@@ -1,4 +1,4 @@
-ISW raw 146715 B, text 35681 znaků; ukázka: 'ously heavily striking the M-14 highway, further complicating this effort. [24] Ukrainian strikes against the Kerch Bridge are part of a wider campaign to degrade Russian ground lines of communication (GLOCs) across the entire theater. The Kremlin is again using Ukrainian strikes to falsely paint Uk'
+ISW raw 148596 B, text 35763 znaků; ukázka: 'ously heavily striking the M-14 highway, further complicating this effort. [24] Ukrainian strikes against the Kerch Bridge are part of a wider campaign to degrade Russian ground lines of communication (GLOCs) across the entire theater. The Kremlin is again using Ukrainian strikes to falsely paint Uk'
 Traceback (most recent call last):
   File "/home/runner/work/Ukraine-war/Ukraine-war/scripts/ai_daily.py", line 146, in <module>
     main()
