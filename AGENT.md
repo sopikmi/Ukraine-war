@@ -11,8 +11,19 @@ Každý běh začíná bez paměti, proto vše potřebné je zde.
 4. Poslat Michalovi krátké shrnutí v češtině.
 
 ## Zdroje (v tomto pořadí)
-- **ISW** – Russian Offensive Campaign Assessment. Adresu nejnovějšího hodnocení VŽDY zjisti z výpisu `https://www.criticalthreats.org/analysis` – některé adresy mají za datem náhodnou příponu (např. `october-10-2026-6acac61e77f69`), takže ji nehádej. Pokud nejnovější hodnocení už bylo použito v předchozím sitrepu, nový sitrep NEPIŠ, jen aktualizuj čísla gen. štábu a oznam to Michalovi. understandingwar.org je pro WebFetch blokovaný, čti zrcadlo `https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-<month>-<d>-<yyyy>` (např. `october-6-2026`), nejnovější dostupný den.
-- **Ukrajinský generální štáb** přes MO Ukrajiny: `https://mod.gov.ua/en/news/total-russian-combat-losses-in-ukraine-as-of-<month>-<d>-<yyyy>` (např. `october-6-2026`). Zkus dnešek, při 404 včerejšek, pak předevčírem. Stránka se může jmenovat i jinak, ověř přes vyhledávání. Minfin.index NEPOUŽÍVEJ – vrací zastaralá data z roku 2025.
+### Jak získat adresy (závazné – jinak WebFetch selže)
+WebFetch v běhu bez obsluhy načte bez schválení jen adresu, která už v běhu „vznikla“: z výsledku WebSearch
+nebo jako odkaz na stránce, kterou jsi už načetl. Adresu poskládanou ze vzoru (dosazené datum) nebo vloženou
+z tohoto návodu bere jako vymyšlenou a čeká na schválení, které nikdo nedá – a po prvním zamítnutí zablokuje i další.
+Proto NIKDY nefetchuj adresu, kterou jsi neviděl ve výsledku WebSearch nebo v odkazu načtené stránky:
+1. Nejdřív WebSearch (např. `criticalthreats.org Russian Offensive Campaign Assessment <Month> <d>, <yyyy>`,
+   `mod.gov.ua total russian combat losses in Ukraine as of <Month> <d>, <yyyy>`) a fetchuj jen adresy z výsledků.
+2. Když vyhledávání nejnovější den ještě nezná, načti nejnovější nalezenou stránku a pokračuj po odkazu na novější
+   (stránky GŠ i ISW odkazují na další dny; výpis `criticalthreats.org/analysis` použij, jen když ho najdeš vyhledáváním nebo v odkazu).
+3. Po chybě oprávnění (PROVENANCE_REQUIRED / „permission request not answered“) stejnou adresu neopakuj, jdi cestou 1–2.
+
+- **ISW** – Russian Offensive Campaign Assessment na zrcadle criticalthreats.org (understandingwar.org je pro WebFetch blokovaný). Adresy mají tvar `…/analysis/russian-offensive-campaign-assessment-<month>-<d>-<yyyy>`, někdy s náhodnou příponou (např. `october-10-2026-6acac61e77f69`) – proto ji nehádej, ber ji z vyhledávání/odkazu (viz výše). Pokud nejnovější hodnocení už bylo použito v předchozím sitrepu, nový sitrep NEPIŠ, jen aktualizuj čísla gen. štábu a oznam to Michalovi.
+- **Ukrajinský generální štáb** přes MO Ukrajiny: stránky `mod.gov.ua/en/news/total-russian-combat-losses-in-ukraine-as-of-<month>-<d>-<yyyy>` – adresu ber z vyhledávání/odkazu (viz výše), hledej dnešek, pak včerejšek, pak předevčírem. Stránka se může jmenovat i jinak. Minfin.index NEPOUŽÍVEJ – vrací zastaralá data z roku 2025.
 - **Britské MO** – Defence Intelligence update (gov.uk / X).
 - **Zpravodajství**: Kyiv Independent, Reuters, Meduza/Mediazona, Euromaidan Press.
 - **Východní křídlo NATO**: jen pokud se ten den stalo něco podstatného (narušení vzdušného prostoru, drony, sabotáže, nasazení jednotek).
