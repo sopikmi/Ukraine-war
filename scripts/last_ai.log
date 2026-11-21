@@ -1,4 +1,4 @@
-ISW raw 146715 B, text 35681 znaků; ukázka: 'ously heavily striking the M-14 highway, further complicating this effort. [24] Ukrainian strikes against the Kerch Bridge are part of a wider campaign to degrade Russian ground lines of communication (GLOCs) across the entire theater. The Kremlin is again using Ukrainian strikes to falsely paint Uk'
+ISW raw 155758 B, text 39688 znaků; ukázka: "ons. A Ukrainian regiment operating in the Velykyi Burluk direction reported on November 20 that Ukraine's Operation Bear Trap liberated 204 square kilometers and 14 settlements north and northeast of Velykyi Burluk near the international border. [xl] The Ukrainian regiment published a map indicatin"
 Traceback (most recent call last):
   File "/home/runner/work/Ukraine-war/Ukraine-war/scripts/ai_daily.py", line 146, in <module>
     main()
