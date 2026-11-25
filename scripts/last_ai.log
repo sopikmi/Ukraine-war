@@ -1,4 +1,4 @@
-ISW raw 146791 B, text 38517 znaků; ukázka: "stop Ukraine from conducting drone and missile strikes against Russia. Russian Security Council Deputy Chairperson Dmitry Medvedev published an article in the Moscow Journal of International Law on November 23 wherein he called on Ukraine and its allies to remember that Russia's nuclear doctrine and"
+ISW raw 138071 B, text 28064 znaků; ukázka: "ified date as part of Poland's and NATO’s response to Russian forces firing three Kh-101 cruise missiles into Polish territory on November 20. [26] Kosiniak-Kamysz stated on November 20 that Poland needs both AWACS aircraft and additional NATO air defense support, specifically additional F-35 fighte"
 Traceback (most recent call last):
   File "/home/runner/work/Ukraine-war/Ukraine-war/scripts/ai_daily.py", line 146, in <module>
     main()
